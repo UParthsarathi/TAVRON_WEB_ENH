@@ -72,6 +72,10 @@
 .tv p { margin: 0 0 1.1em; color: var(--slate); }
 .tv a { color: var(--accent-700); text-decoration: none; transition: color .2s var(--ease); }
 .tv a:hover { color: var(--accent); text-decoration: none; }
+/* Phone numbers are tappable but never highlighted — they read as text, not links.
+   Buttons are excluded; there the tel: link IS the call-to-action. */
+.tv a[href^="tel:"]:not(.tv-btn),
+.tv a[href^="tel:"]:not(.tv-btn):hover { color: inherit; }
 .tv img { max-width: 100%; height: auto; }
 .tv ul { margin: 0; padding: 0; }
 
@@ -748,6 +752,7 @@
 }
 .tv #footer p { color: rgba(200,220,234,.7); font-size: .94rem; line-height: 1.8; }
 .tv #footer a { color: #6fdcf0; }
+.tv #footer a[href^="tel:"], .tv #footer a[href^="tel:"]:hover { color: inherit; }
 .tv #footer .copyright, .tv #footer .credits { color: rgba(200,220,234,.55); font-size: .86rem; }
 /* footer tracks the widest page container so it does not sit narrower than the content above */
 .tv #footer .container { max-width: 1340px; }
