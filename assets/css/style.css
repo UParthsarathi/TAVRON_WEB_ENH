@@ -2150,6 +2150,12 @@ section {
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* Phone numbers are tappable but never highlighted — they read as plain text. */
+#footer a[href^="tel:"],
+#footer a[href^="tel:"]:hover {
+  color: inherit;
+}
+
 #footer .footer-top h4 {
   font-size: 16px;
   font-weight: bold;

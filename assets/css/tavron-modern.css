@@ -412,16 +412,6 @@
   background: linear-gradient(135deg, rgba(10,162,190,.16), rgba(233,150,47,.12));
   z-index: -1;
 }
-.tv-split__badge {
-  position: absolute; left: -18px; bottom: 24px;
-  background: #fff; border-radius: var(--r-md);
-  box-shadow: var(--shadow-md);
-  padding: 16px 20px; display: flex; align-items: center; gap: 14px;
-  border: 1px solid var(--line);
-}
-.tv-split__badge i { font-size: 26px; color: var(--accent-600); }
-.tv-split__badge strong { display: block; font-family: var(--f-display); font-size: 1.1rem; color: var(--ink); line-height: 1.2; }
-.tv-split__badge span { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
 
 /* checklist */
 .tv-check { list-style: none; display: grid; gap: 13px; margin: 4px 0 28px; }
@@ -547,45 +537,6 @@
 .tv-cta h2 { color: #fff; margin-bottom: 12px; }
 .tv-cta p { color: rgba(214,230,241,.82); margin-bottom: 0; }
 .tv-cta__actions { position: relative; display: flex; flex-wrap: wrap; gap: 13px; }
-
-/* --------------------------------------------------------------------------
-   12. Product page — hero
-   -------------------------------------------------------------------------- */
-.tv-phero {
-  position: relative;
-  padding: 148px 0 clamp(48px, 6vw, 82px);
-  background:
-    radial-gradient(880px 420px at 84% 4%, rgba(10,162,190,.30), transparent 62%),
-    linear-gradient(155deg, #0a1a2a 0%, #14304a 60%, #0a1a2a 100%);
-  color: #fff;
-  overflow: hidden;
-}
-.tv-phero::before {
-  content: ""; position: absolute; inset: 0; opacity: .14;
-  background-image:
-    linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);
-  background-size: 58px 58px;
-  mask-image: radial-gradient(900px 500px at 15% 20%, #000, transparent 75%);
-  -webkit-mask-image: radial-gradient(900px 500px at 15% 20%, #000, transparent 75%);
-}
-.tv-phero__grid {
-  position: relative;
-  display: grid; grid-template-columns: 1.08fr .92fr;
-  gap: clamp(30px, 4.5vw, 62px); align-items: center;
-}
-.tv-crumb {
-  list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
-  font-size: 12.5px; color: rgba(178,204,222,.75); margin-bottom: 18px;
-}
-.tv-crumb a { color: rgba(178,204,222,.9); }
-.tv-crumb a:hover { color: #6fdcf0; }
-.tv-crumb li + li::before { content: "/"; margin-right: 8px; color: rgba(178,204,222,.45); }
-.tv-crumb li[aria-current] { color: #fff; font-weight: 600; }
-
-.tv-phero h1 { color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.35rem); margin-bottom: 16px; }
-.tv .tv-phero__lead { color: rgba(224,238,248,.92); font-size: clamp(1rem, 1.35vw, 1.14rem); max-width: 560px; margin-bottom: 26px; }
-.tv-phero__cta { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 28px; }
 
 /* gallery viewer */
 .tv-viewer { position: relative; }
@@ -789,50 +740,48 @@
 }
 
 /* --------------------------------------------------------------------------
-   15. Contact page
+   15. Contact page — one enquiry form, nothing else
+   Address, phone and email are in the footer on every page, so they are not
+   restated here. Fields are numbered and underlined: structure without chrome.
    -------------------------------------------------------------------------- */
-.tv-quickcard {
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.16);
-  border-radius: var(--r-lg);
-  padding: clamp(24px, 3vw, 34px);
-  backdrop-filter: blur(10px);
-}
-.tv-quickcard h3 { color: #fff; font-size: 1.02rem; margin-bottom: 6px; }
-.tv-quickcard > p { color: rgba(214,230,241,.72); font-size: .9rem; margin-bottom: 6px; }
-.tv-quickrow {
-  display: flex; gap: 14px; align-items: flex-start;
-  padding: 16px 0; border-top: 1px solid rgba(255,255,255,.12);
-}
-.tv-quickrow:first-of-type { border-top: 0; padding-top: 16px; }
-.tv-quickrow__icon {
-  flex: 0 0 auto; width: 38px; height: 38px; border-radius: 10px;
-  display: grid; place-items: center;
-  background: rgba(95,214,236,.12); color: #6fdcf0; font-size: 17px;
-}
-.tv-quickrow strong { display: block; color: #fff; font-size: .86rem; font-weight: 650; margin-bottom: 3px; }
-.tv-quickrow span, .tv-quickrow a { display: block; color: rgba(214,230,241,.78); font-size: .87rem; line-height: 1.6; }
-.tv-quickrow a:hover { color: #6fdcf0; }
+.tv-enquiry { max-width: 620px; margin-inline: auto; padding-bottom: clamp(64px, 8vw, 112px); }
+.tv-enquiry .tv-doc__title { margin-bottom: 14px; }
+.tv .tv-enquiry .tv-doc__intro { margin-bottom: 46px; max-width: none; }
 
-/* office / factory address cards */
-.tv-addr { display: flex; gap: 16px; }
-.tv-addr__icon {
-  flex: 0 0 auto; width: 46px; height: 46px; border-radius: 12px;
-  display: grid; place-items: center;
-  background: var(--accent-050); border: 1px solid rgba(10,162,190,.2);
-  color: var(--accent-600); font-size: 20px;
+/* Prefixed with .php-email-form so these beat the shared form rules below, which
+   are defined later in the file and would otherwise win on source order. */
+.tv-form { counter-reset: tvfield; }
+.tv .php-email-form.tv-form .form-group {
+  counter-increment: tvfield;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  margin-bottom: 4px;
 }
-.tv-addr h3 { font-size: 1.02rem; margin-bottom: 8px; }
-.tv-addr p { font-size: .92rem; margin-bottom: 6px; }
-.tv-addr a { font-weight: 650; }
-
-/* contact form card */
-.tv-formcard {
-  background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
-  padding: clamp(26px, 3.4vw, 40px); box-shadow: var(--shadow-md); height: 100%;
+.tv .php-email-form.tv-form label {
+  display: flex; align-items: baseline; gap: 12px;
+  font-size: .95rem; font-weight: 650; letter-spacing: 0;
+  color: var(--ink); margin-bottom: 2px;
 }
-.tv-formcard h3 { font-size: 1.3rem; margin-bottom: 8px; }
-.tv-formcard > p { margin-bottom: 26px; }
+.tv .php-email-form.tv-form label::before {
+  content: "0" counter(tvfield);
+  font-size: 11px; font-weight: 650; letter-spacing: .1em;
+  color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.tv .php-email-form.tv-form input,
+.tv .php-email-form.tv-form textarea {
+  width: 100%; height: auto;
+  border: 0; border-bottom: 1.5px solid var(--line-2); border-radius: 0;
+  background: transparent; box-shadow: none;
+  padding: 8px 0 14px;
+  font-family: var(--f-body); font-size: 1.02rem; color: var(--ink);
+  transition: border-color .2s var(--ease);
+}
+.tv .php-email-form.tv-form textarea { resize: vertical; }
+.tv .php-email-form.tv-form input:focus,
+.tv .php-email-form.tv-form textarea:focus { border-bottom-color: var(--accent); outline: none; }
+.tv .php-email-form.tv-form input::placeholder,
+.tv .php-email-form.tv-form textarea::placeholder { color: rgba(10,26,42,.30); }
+.tv-form__actions { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 26px; }
 
 .tv .php-email-form .form-group { margin-bottom: 18px; }
 .tv .php-email-form label {
@@ -843,14 +792,12 @@
 .tv .php-email-form textarea {
   width: 100%; border-radius: var(--r-sm); border: 1.5px solid var(--line-2);
   padding: 12px 15px; font-size: 14.5px; font-family: var(--f-body); color: var(--ink-2);
-  background: var(--surface); box-shadow: none;
-  transition: border-color .2s var(--ease), background .2s var(--ease);
+  background: #fff; box-shadow: none;
+  transition: border-color .2s var(--ease);
 }
 .tv .php-email-form input { height: 48px; }
 .tv .php-email-form input:focus,
-.tv .php-email-form textarea:focus {
-  border-color: var(--accent); background: #fff; outline: none;
-}
+.tv .php-email-form textarea:focus { border-color: var(--accent); outline: none; }
 .tv .php-email-form .validate { display: none; color: #d9481f; margin: 6px 0 0; font-weight: 600; font-size: 12.5px; }
 .tv .php-email-form .error-message {
   display: none; color: #fff; background: #d9481f; border-radius: var(--r-sm);
@@ -877,12 +824,6 @@
 }
 .tv-wa:hover { background: rgba(37,211,102,.28); color: #1da851; transform: translateY(-1px); }
 
-/* map */
-.tv-mapwrap {
-  border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line);
-  box-shadow: var(--shadow-md); line-height: 0;
-}
-.tv-mapwrap iframe { display: block; width: 100%; height: 380px; border: 0; }
 
 /* --------------------------------------------------------------------------
    16. Responsive
@@ -902,9 +843,6 @@
       linear-gradient(180deg, rgba(6,17,28,.92) 0%, rgba(6,17,28,.86) 55%, rgba(6,17,28,.94) 100%),
       radial-gradient(600px 380px at 80% 10%, rgba(10,162,190,.28), transparent 65%);
   }
-  .tv-split__badge { left: 12px; bottom: 12px; padding: 13px 16px; }
-  .tv-phero { padding: 116px 0 60px; }
-  .tv-phero__grid { grid-template-columns: 1fr; }
   .tv-split { grid-template-columns: 1fr; }
   .tv-split--flip > *:first-child { order: 0; }
   .tv-split__figure::before { display: none; }
@@ -923,13 +861,12 @@
 }
 
 /* --------------------------------------------------------------------------
-   17. Product datasheet layer — .tv-doc
-   Deliberately does NOT reuse the landing-page kit (.tv-phero / .tv-specstrip /
-   .tv-variant / .tv-cta / .tv-section--ink). A product page should read as a
-   document, not a second home page: flat, light, hairline rules, no cards,
-   no gradients, no dark bands, no scroll reveals.
-   Everything here is scoped to .tv-doc, so index.html and contact.html are
-   untouched (both still use .tv-phero / .tv-crumb).
+   17. Document layer — .tv-doc
+   Deliberately does NOT reuse the landing-page kit (.tv-specstrip / .tv-variant /
+   .tv-cta / .tv-section--ink). These pages should read as a document, not a
+   second home page: flat, light, hairline rules, no cards, no gradients, no dark
+   bands, no scroll reveals.
+   Used by bulkCoolers.html and contact.html. index.html keeps the landing kit.
    -------------------------------------------------------------------------- */
 .tv-doc { padding: 118px 0 0; background: var(--paper); }
 .tv-doc__wrap { width: 100%; max-width: 1340px; margin-inline: auto; padding-inline: var(--gutter); }
