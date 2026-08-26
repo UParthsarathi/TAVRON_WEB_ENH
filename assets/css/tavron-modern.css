@@ -817,6 +817,15 @@
 }
 @keyframes tv-spin { to { transform: rotate(360deg); } }
 
+/* WhatsApp icon-link next to a mobile number */
+.tv-wa {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(37,211,102,.15); color: #25d366; font-size: 13px;
+  transition: background .2s var(--ease), transform .2s var(--ease);
+}
+.tv-wa:hover { background: rgba(37,211,102,.28); color: #1da851; transform: translateY(-1px); }
+
 /* map */
 .tv-mapwrap {
   border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line);
