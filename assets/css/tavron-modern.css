@@ -239,14 +239,21 @@
 .tv #header.tv-header--solid .header-social-links a { color: var(--muted); }
 .tv #header.tv-header--solid .header-social-links a:hover { color: var(--accent-700); }
 
-/* pages that don't start with a dark hero */
-.tv--light-top #header { background: rgba(255,255,255,.92); backdrop-filter: saturate(180%) blur(14px); box-shadow: 0 1px 0 var(--line); }
+/* pages that don't start with a dark hero, or where a solid header is wanted throughout */
+.tv--light-top #header { background: #fff; box-shadow: 0 1px 0 var(--line), 0 8px 30px rgba(10,26,42,.06); padding: 8px 0; }
+.tv--light-top #header .logo { background-image: url("../img/logo.png"); }
 .tv--light-top #header .logo img { filter: none; }
 .tv--light-top .nav-menu a { color: var(--ink-2); }
+.tv--light-top .nav-menu a:hover,
+.tv--light-top .nav-menu .active > a,
+.tv--light-top .nav-menu li:hover > a { color: var(--accent-700); }
+.tv--light-top .nav-menu > ul > li::after { background: var(--accent); }
 .tv--light-top .header-social-links a { color: var(--muted); }
+.tv--light-top .header-social-links a:hover { color: var(--accent-700); }
 
 /* mobile toggle — the template paints it brand-green; recolour it */
 .tv .mobile-nav-toggle i { color: #fff; }
+.tv--light-top .mobile-nav-toggle i { color: var(--ink-2); }
 .tv.mobile-nav-active .mobile-nav-toggle i { color: #fff; }
 .tv .mobile-nav { background: rgba(7,21,35,.98); }
 .tv .mobile-nav a { color: rgba(233,243,249,.9); font-family: var(--f-body); }
@@ -843,6 +850,7 @@
 @media (max-width: 991px) {
   .tv #header { padding: 12px 0; background: rgba(7,21,35,.94); backdrop-filter: blur(12px); }
   .tv #header.tv-header--solid { background: rgba(255,255,255,.96); }
+  .tv--light-top #header { background: #fff; }
   .tv-hero { min-height: auto; padding: 118px 0 76px; }
   /* narrow screens see more of the bright slide behind the copy */
   .tv-hero__scrim {
