@@ -445,6 +445,7 @@
 .tv-grid--2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
 .tv-grid--3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .tv-grid--4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.tv-grid--5 { grid-template-columns: repeat(5, minmax(0,1fr)); gap: 18px; }
 
 .tv-card {
   background: #fff; border: 1px solid var(--line);
@@ -455,11 +456,21 @@
 }
 .tv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(10,162,190,.28); }
 .tv-card h3 { font-size: 1.12rem; margin-bottom: 10px; }
+
+/* five-up stage cards: narrower than the kit's default, so pull the padding
+   and type in and let the numeral carry the sequence */
+.tv-stages .tv-card { padding: 24px 22px 26px; }
+.tv-stages .tv-card h3 { font-size: .99rem; line-height: 1.32; margin-bottom: 9px; letter-spacing: -.006em; }
+.tv-stages .tv-card p { font-size: .875rem; line-height: 1.58; }
+.tv-stages .tv-card__icon { width: 42px; height: 42px; border-radius: 11px; font-size: 20px; margin-bottom: 15px; }
+.tv-stages .tv-card__num { font-size: 11px; letter-spacing: .16em; margin-bottom: 12px; }
 .tv-card p { font-size: .95rem; margin-bottom: 0; }
+/* accent-600 on white is 4.06:1 — under AA at this size. accent-700 is 5.73. */
 .tv-card__num {
   font-family: var(--f-display); font-size: 12px; font-weight: 700;
-  letter-spacing: .14em; color: var(--accent-600); display: block; margin-bottom: 14px;
+  letter-spacing: .14em; color: var(--accent-700); display: block; margin-bottom: 14px;
 }
+.tv-section--ink .tv-card__num { color: #6fdcf0; }
 .tv-card__icon {
   width: 50px; height: 50px; border-radius: 13px;
   display: inline-flex; align-items: center; justify-content: center;
@@ -512,34 +523,8 @@
 .tv-prod { position: relative; }
 
 /* --------------------------------------------------------------------------
-   Turnkey chain — the six stages one contract covers.
-   Lives inside the copy column, not full-width below the split: a 6-across
-   row broke on gridlines the two-column content above never used, so it read
-   as a separate object floating under the section.
+   Turnkey section support
    -------------------------------------------------------------------------- */
-.tv-chain {
-  list-style: none; padding: 0;
-  margin: clamp(26px, 3vw, 34px) 0 0;
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px 24px;
-}
-.tv-chain li {
-  position: relative; padding-top: 16px;
-  border-top: 1px solid rgba(143,214,232,.24);
-  font-family: var(--f-display); font-size: 1.06rem; font-weight: 650;
-  color: #f2f9fc; line-height: 1.3; letter-spacing: -.005em;
-}
-.tv-chain li::before {
-  content: ""; position: absolute; top: -1px; left: 0;
-  width: 22px; height: 2px; background: #5fd6ec;
-}
-/* the numeral is the sequence, so give it real presence instead of a caption */
-.tv-chain li span {
-  display: block; margin-bottom: 7px;
-  font-size: 13px; font-weight: 700; letter-spacing: .16em;
-  color: #6fdcf0;
-}
-
 /* product lines: a caption on the figure, well below the lead in weight */
 .tv .tv-lines {
   font-size: .82rem; line-height: 1.6; color: rgba(196,219,234,.72);
@@ -552,13 +537,6 @@
 }
 .tv .tv-link--on-dark { color: #6fdcf0; }
 .tv .tv-link--on-dark:hover { color: #a5ecf9; }
-
-@media (max-width: 991px) {
-  .tv-chain { grid-template-columns: repeat(3, minmax(0,1fr)); }
-}
-@media (max-width: 560px) {
-  .tv-chain { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px 18px; }
-}
 
 /* --------------------------------------------------------------------------
    10. Stats
@@ -915,6 +893,7 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 1100px) {
   .tv-grid--4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-grid--5 { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .tv-specstrip { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 @media (max-width: 991px) {
@@ -932,11 +911,12 @@
   .tv-split--flip > *:first-child { order: 0; }
   .tv-split__figure::before { display: none; }
   .tv-grid--3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-grid--5 { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .tv-stats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 32px 20px; }
 }
 @media (max-width: 700px) {
   .tv { font-size: 16px; }
-  .tv-grid--2, .tv-grid--3, .tv-grid--4 { grid-template-columns: 1fr; }
+  .tv-grid--2, .tv-grid--3, .tv-grid--4, .tv-grid--5 { grid-template-columns: 1fr; }
   .tv-hero__rail { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .tv-specstrip { grid-template-columns: 1fr; margin-top: -20px; }
   .tv-cta { flex-direction: column; align-items: flex-start; }
