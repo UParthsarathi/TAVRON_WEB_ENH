@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 340" fill="none"
-     stroke="#8fd6e8" stroke-opacity=".16" stroke-width="1.4"
+     stroke="#0a1a2a" stroke-opacity=".14" stroke-width="1.4"
      stroke-linecap="round" stroke-linejoin="round">
   <title>Process train: balance tank, pasteuriser, evaporator effects, spray dryer, packing</title>
 
   <!-- raw milk in -->
   <path d="M20 150 h96"/>
-  <path d="M96 150 l-11-6 v12 z" fill="#8fd6e8" fill-opacity=".16" stroke="none"/>
+  <path d="M96 150 l-11-6 v12 z" fill="#0a1a2a" fill-opacity=".14" stroke="none"/>
 
   <!-- balance tank -->
   <path d="M116 104 h104 v70 q0 26-52 26 q-52 0-52-26 z"/>
@@ -55,7 +55,7 @@
   <path d="M1260 268 h84" stroke-opacity=".1"/>
   <path d="M1302 244 v-28"/>
   <path d="M1344 276 h44"/>
-  <path d="M1376 276 l-11-6 v12 z" fill="#8fd6e8" fill-opacity=".16" stroke="none"/>
+  <path d="M1376 276 l-11-6 v12 z" fill="#0a1a2a" fill-opacity=".14" stroke="none"/>
 
   <!-- instrument bubbles tagged onto the train -->
   <circle cx="440" cy="256" r="22"/>

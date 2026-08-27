@@ -106,6 +106,37 @@
   opacity: .5; pointer-events: none;
 }
 .tv-section--ink > * { position: relative; }
+/* --------------------------------------------------------------------------
+   Turnkey band — pale blue, the same family as the product page ground.
+   It was dark and sat directly above the near-black stats band, so two dark
+   sections ran together. Light here also puts the plant render on a ground
+   close to its own backdrop, so the shadow carries the edge.
+   -------------------------------------------------------------------------- */
+.tv-section--turnkey {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(900px 460px at 92% -14%, rgba(10,162,190,.16), transparent 62%),
+    linear-gradient(168deg, #dfeaf3 0%, #d3e3ef 54%, #dbe8f2 100%);
+}
+/* the process train the section describes, as ground */
+.tv-section--turnkey::before {
+  content: ""; position: absolute; inset: 0;
+  background: url("../img/bg/pid-plant-train.svg") center 62% / 1500px auto no-repeat;
+  opacity: .5; pointer-events: none;
+}
+.tv-section--turnkey > * { position: relative; }
+.tv-section--turnkey h2 { color: var(--ink); }
+.tv .tv-section--turnkey .tv-lead { color: var(--ink-3); }
+.tv .tv-section--turnkey .tv-lines { color: var(--slate); }
+/* accent-700 is only 4.37 on this ground and 3.81 where the train crosses it.
+   #055866 is the same deep teal the product page uses for its labels. */
+.tv-section--turnkey .tv-eyebrow { color: #055866; }
+.tv-section--turnkey .tv-eyebrow::before {
+  background: linear-gradient(90deg, #055866, rgba(5,88,102,0));
+}
+.tv .tv-section--turnkey .tv-link { color: #055866; }
+.tv .tv-section--turnkey .tv-link:hover { color: var(--accent-700); }
+
 .tv-section--ink h2, .tv-section--ink h3, .tv-section--ink h4 { color: #fff; }
 .tv-section--ink p { color: rgba(214,230,241,.82); }
 
@@ -418,7 +449,7 @@
 }
 /* the plant render is 2.16:1 with the subject in the middle third; crop the
    empty background off the sides rather than showing it at full width */
-.tv-section--ink .tv-split__figure img { aspect-ratio: 3 / 2; object-fit: cover; }
+.tv-section--turnkey .tv-split__figure img { aspect-ratio: 3 / 2; object-fit: cover; }
 .tv-split__figure::before {
   content: ""; position: absolute; inset: auto -18px -18px auto;
   width: 62%; height: 62%; border-radius: var(--r-lg);
