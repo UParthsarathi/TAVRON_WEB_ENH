@@ -134,8 +134,14 @@
 .tv-section--turnkey .tv-eyebrow::before {
   background: linear-gradient(90deg, #055866, rgba(5,88,102,0));
 }
-.tv .tv-section--turnkey .tv-link { color: #055866; }
-.tv .tv-section--turnkey .tv-link:hover { color: var(--accent-700); }
+/* the ghost pill's default border is rgba(10,26,42,.16), which nearly vanishes
+   on this ground — give it a white fill and a firmer edge so the capsule reads */
+.tv .tv-section--turnkey .tv-btn--ghost {
+  background: rgba(255,255,255,.72); border-color: rgba(5,88,102,.28); color: #073c47;
+}
+.tv .tv-section--turnkey .tv-btn--ghost:hover {
+  background: #fff; border-color: var(--accent); color: #055866;
+}
 
 .tv-section--ink h2, .tv-section--ink h3, .tv-section--ink h4 { color: #fff; }
 .tv-section--ink p { color: rgba(214,230,241,.82); }
