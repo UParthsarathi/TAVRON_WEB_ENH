@@ -406,6 +406,9 @@
   box-shadow: var(--shadow-lg);
   display: block;
 }
+/* the plant render is 2.16:1 with the subject in the middle third; crop the
+   empty background off the sides rather than showing it at full width */
+.tv-section--ink .tv-split__figure img { aspect-ratio: 3 / 2; object-fit: cover; }
 .tv-split__figure::before {
   content: ""; position: absolute; inset: auto -18px -18px auto;
   width: 62%; height: 62%; border-radius: var(--r-lg);
