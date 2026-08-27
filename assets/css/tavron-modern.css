@@ -798,11 +798,39 @@
 .tv #footer .container { max-width: 1340px; }
 .tv #footer .footer-top .row { row-gap: 36px; }
 .tv #footer .footer-about p { max-width: 42ch; }
-.tv #footer .footer-line { margin-top: 16px; }
+/* The three columns were equal 447px, so the short brand paragraph left a void
+   while the two address blocks ran dense. Weight them to their content. */
+.tv #footer .footer-top .row {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 30px 56px; margin: 0;
+}
+.tv #footer .footer-top .row > [class*="col-"] {
+  flex: none; width: auto; max-width: none; padding: 0;
+}
+
+/* Phone and Email were label-over-value at 50px each. Label beside value puts
+   them on one line and lines the labels up in a column across both blocks. */
+/* NOT grid: the three phone numbers are direct children, so a grid made each
+   one its own cell and forced it onto its own line. Hanging indent keeps them
+   as inline text while still lining the label and the values up in columns. */
+.tv #footer .footer-line {
+  margin-top: 9px;
+  padding-left: 74px; text-indent: -74px;
+}
 .tv #footer .footer-line span {
-  display: block; margin-bottom: 2px;
+  display: inline-block; width: 58px; margin: 0 16px 0 0; text-indent: 0;
+  vertical-align: top;
   font-size: 11px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase;
   color: rgba(200,220,234,.45);
+}
+/* keep a number intact: "+91" was ending one line and the rest starting the next */
+.tv #footer .footer-line a { white-space: nowrap; }
+
+@media (max-width: 991px) {
+  .tv #footer .footer-top .row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .tv #footer .footer-top .row { grid-template-columns: 1fr; }
 }
 .tv #footer > .container { border-top: 1px solid rgba(255,255,255,.08); }
 .tv #footer .social-links a { color: rgba(200,220,234,.6); }
