@@ -576,53 +576,6 @@
 .tv .tv-link--on-dark:hover { color: #a5ecf9; }
 
 /* --------------------------------------------------------------------------
-   10. Stats
-   -------------------------------------------------------------------------- */
-/* The band was a flat rectangle with four centred numbers — the stock counter
-   strip. Same figures, rebuilt: a material ground, left-aligned columns
-   divided by hairlines, an accent tick over each figure, and no count-up. */
-.tv-figures {
-  position: relative; overflow: hidden;
-  background:
-    radial-gradient(760px 380px at 84% -30%, rgba(10,162,190,.16), transparent 64%),
-    linear-gradient(180deg, #081826 0%, #061321 100%);
-}
-/* fine ruling, so the ground reads as a measured surface not a filled div */
-.tv-figures::before {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background-image: linear-gradient(90deg, rgba(143,214,232,.05) 1px, transparent 1px);
-  background-size: 88px 100%;
-  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
-}
-.tv-figures > * { position: relative; }
-
-.tv-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 0; }
-.tv-stat { position: relative; text-align: left; padding: 4px 28px 4px 0; }
-/* hairline between columns, inset top and bottom rather than full height */
-.tv-stat + .tv-stat { padding-left: 40px; }
-.tv-stat + .tv-stat::after {
-  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px;
-  width: 1px; background: rgba(143,214,232,.16);
-}
-/* the tick ties these to the chain and the section labels elsewhere */
-.tv-stat::before {
-  content: ""; display: block; width: 24px; height: 2px;
-  background: #5fd6ec; margin-bottom: 20px;
-}
-.tv-stat strong {
-  display: block; font-family: var(--f-display);
-  font-size: clamp(2.1rem, 4.4vw, 3.4rem); font-weight: 700;
-  line-height: .95; letter-spacing: -.028em; color: #fff; margin-bottom: 14px;
-  font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
-}
-.tv-stat span {
-  display: block; font-size: 11px; font-weight: 650; letter-spacing: .17em;
-  text-transform: uppercase; color: rgba(186,212,229,.86);
-}
-.tv-stat em { font-style: normal; color: #6fdcf0; }
-
-/* --------------------------------------------------------------------------
    11. CTA band
    -------------------------------------------------------------------------- */
 .tv-cta {
@@ -979,10 +932,6 @@
   .tv-split__figure::before { display: none; }
   .tv-grid--3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .tv-grid--5 { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .tv-stats { grid-template-columns: repeat(2, minmax(0,1fr)); row-gap: 34px; }
-  /* on two columns only the second in each row takes a divider */
-  .tv-stat:nth-child(odd) { padding-left: 0; }
-  .tv-stat:nth-child(odd)::after { display: none; }
 }
 @media (max-width: 700px) {
   .tv { font-size: 16px; }
