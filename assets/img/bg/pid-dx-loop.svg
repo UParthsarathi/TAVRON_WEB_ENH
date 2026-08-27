@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" fill="none"
+     stroke="#0a1a2a" stroke-opacity=".075" stroke-width="1.15"
+     stroke-linecap="round" stroke-linejoin="round">
+  <title>Direct expansion refrigeration loop: jacketed vessel, compressor, condenser, expansion valve</title>
+
+  <!-- jacketed vessel with agitator -->
+  <path d="M40 74 q0-26 34-26 h96 q34 0 34 26 v152 q0 26-34 26 h-96 q-34 0-34-26 z"/>
+  <path d="M22 70 q0-40 52-40 h96 q52 0 52 40 v160 q0 40-52 40 h-96 q-52 0-52-40 z"
+        stroke-opacity=".05"/>
+  <g stroke-opacity=".05">
+    <circle cx="31" cy="104" r="5"/><circle cx="31" cy="150" r="5"/><circle cx="31" cy="196" r="5"/>
+    <circle cx="213" cy="104" r="5"/><circle cx="213" cy="150" r="5"/><circle cx="213" cy="196" r="5"/>
+  </g>
+  <rect x="106" y="14" width="32" height="20" rx="4"/>
+  <path d="M122 34 v122 M104 156 h36"/>
+
+  <!-- suction line to compressor -->
+  <path d="M222 90 h94"/>
+  <path d="M300 90 l-10-6 v12 z" fill="#0a1a2a" fill-opacity=".075" stroke="none"/>
+
+  <!-- compressor -->
+  <circle cx="352" cy="90" r="34"/>
+  <path d="M340 72 v36 l24-18 z"/>
+
+  <!-- discharge to condenser -->
+  <path d="M386 90 h84"/>
+
+  <!-- air-cooled condenser -->
+  <rect x="470" y="46" width="132" height="88" rx="5"/>
+  <path d="M494 46 v88 M518 46 v88 M542 46 v88 M566 46 v88" stroke-opacity=".05"/>
+
+  <!-- liquid line down to the expansion valve -->
+  <path d="M602 90 h68 v106 h-62"/>
+
+  <!-- thermostatic expansion valve -->
+  <path d="M608 196 l-32-18 v36 z M608 196 l32-18 v36 z"/>
+  <path d="M608 196 v-28 M594 168 h28"/>
+
+  <!-- return to the jacket -->
+  <path d="M576 196 h-354"/>
+  <path d="M330 196 l10 6 v-12 z" fill="#0a1a2a" fill-opacity=".075" stroke="none"/>
+
+  <!-- field instruments tagged off the vessel -->
+  <circle cx="700" cy="238" r="26"/>
+  <path d="M674 238 h52" stroke-opacity=".05"/>
+  <circle cx="790" cy="238" r="26"/>
+  <path d="M764 238 h52" stroke-opacity=".05"/>
+  <path d="M700 212 v-16 M790 212 v-42 h-120" stroke-opacity=".07" stroke-dasharray="6 6"/>
+</svg>

@@ -183,7 +183,7 @@
   function initStickyBar() {
     var bar = document.querySelector(".tv-stickybar");
     if (!bar) return;
-    var anchor = document.querySelector(".tv-phero");
+    var anchor = document.querySelector(".tv-phero, .tv-doc__top");
     var trigger = anchor ? anchor.offsetHeight : 500;
     var onScroll = function () {
       bar.classList.toggle("is-visible", window.scrollY > trigger);

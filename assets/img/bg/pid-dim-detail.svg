@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 148" fill="none"
+     stroke="#0a1a2a" stroke-opacity=".075" stroke-width="0.8"
+     stroke-linecap="round" stroke-linejoin="round">
+  <title>General arrangement detail: vessel elevation with A and B dimensions</title>
+
+  <!-- vessel elevation on legs -->
+  <path d="M96 34 q0-18 26-18 h176 q26 0 26 18 v56 q0 18-26 18 h-176 q-26 0-26-18 z"/>
+  <rect x="192" y="4" width="36" height="12" rx="3"/>
+  <path d="M210 16 v40 M196 56 h28"/>
+  <path d="M136 108 v20 M284 108 v20"/>
+
+  <!-- outlet nozzle and valve -->
+  <path d="M324 74 h30"/>
+  <path d="M368 74 l-14-8 v16 z M368 74 l14-8 v16 z"/>
+
+  <!-- B: overall length, witness lines down from each end -->
+  <path d="M96 112 v28 M324 112 v28" stroke-opacity=".05" stroke-dasharray="4 5"/>
+  <path d="M96 134 h228" stroke-opacity=".075"/>
+  <path d="M96 134 l11-6 v12 z M324 134 l-11-6 v12 z" fill="#0a1a2a" fill-opacity=".075" stroke="none"/>
+  <text x="205" y="130" font-family="Inter, Arial, sans-serif" font-size="13"
+        fill="#0a1a2a" fill-opacity=".085" stroke="none" text-anchor="middle">B</text>
+
+  <!-- A: shell height, witness lines out to the right -->
+  <path d="M324 16 h84 M324 108 h84" stroke-opacity=".05" stroke-dasharray="4 5"/>
+  <path d="M400 16 v92" stroke-opacity=".075"/>
+  <path d="M400 16 l-6 11 h12 z M400 108 l-6-11 h12 z" fill="#0a1a2a" fill-opacity=".075" stroke="none"/>
+  <text x="416" y="66" font-family="Inter, Arial, sans-serif" font-size="13"
+        fill="#0a1a2a" fill-opacity=".085" stroke="none">A</text>
+</svg>
