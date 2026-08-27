@@ -680,8 +680,38 @@
 .tv-stickybar.is-visible { transform: translateY(0); }
 .tv-stickybar__inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
 .tv-stickybar__actions { display: flex; gap: 10px; flex-wrap: wrap; }
-/* the bar floats over the foot of the page; lift the back-to-top clear of it */
-.tv .tv-stickybar.is-visible ~ .back-to-top { bottom: 88px; }
+/* --------------------------------------------------------------------------
+   Floating actions, bottom right. Stacked from the bottom up:
+   WhatsApp (54px) -> back-to-top (40px). The sticky bar lifts both.
+   Inline SVG glyph rather than an icon font, so this does not depend on
+   which icon sets a page happens to link.
+   -------------------------------------------------------------------------- */
+.tv .tv-wa {
+  position: fixed; right: 15px; bottom: 15px; z-index: 995;
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #25d366; color: #fff;
+  box-shadow: 0 4px 14px rgba(10,26,42,.22), 0 2px 4px rgba(10,26,42,.12);
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease), bottom .35s var(--ease);
+}
+.tv .tv-wa svg { width: 30px; height: 30px; display: block; }
+.tv .tv-wa:hover {
+  color: #fff; transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(10,26,42,.28), 0 3px 6px rgba(10,26,42,.14);
+}
+.tv .tv-wa:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* sit the back-to-top above it instead of on top of it */
+.tv .back-to-top { bottom: 80px; transition: bottom .35s var(--ease); }
+
+/* the sticky bar floats over the foot of the page; lift both clear of it */
+.tv .tv-stickybar.is-visible ~ .tv-wa { bottom: 88px; }
+.tv .tv-stickybar.is-visible ~ .back-to-top { bottom: 153px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tv .tv-wa, .tv .back-to-top { transition: none; }
+  .tv .tv-wa:hover { transform: none; }
+}
 .tv-stickybar strong { font-family: var(--f-display); color: var(--ink); font-size: 1rem; display: block; line-height: 1.3; }
 .tv-stickybar span { font-size: 12.5px; color: var(--muted); }
 
