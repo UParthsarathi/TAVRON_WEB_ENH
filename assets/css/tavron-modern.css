@@ -512,46 +512,52 @@
 .tv-prod { position: relative; }
 
 /* --------------------------------------------------------------------------
-   Turnkey chain — the six stages one contract covers. Replaces a checkmark
-   list of product categories, which read as a slide rather than an argument.
+   Turnkey chain — the six stages one contract covers.
+   Lives inside the copy column, not full-width below the split: a 6-across
+   row broke on gridlines the two-column content above never used, so it read
+   as a separate object floating under the section.
    -------------------------------------------------------------------------- */
 .tv-chain {
-  list-style: none; margin: clamp(38px, 5vw, 60px) 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0;
-  border-top: 1px solid rgba(143,214,232,.22);
+  list-style: none; padding: 0;
+  margin: clamp(26px, 3vw, 34px) 0 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 24px;
 }
 .tv-chain li {
-  position: relative;
-  padding: 22px 20px 4px 0;
-  font-family: var(--f-display); font-size: .98rem; font-weight: 600;
-  color: #eaf4f9; line-height: 1.35;
+  position: relative; padding-top: 16px;
+  border-top: 1px solid rgba(143,214,232,.24);
+  font-family: var(--f-display); font-size: 1.06rem; font-weight: 650;
+  color: #f2f9fc; line-height: 1.3; letter-spacing: -.005em;
 }
-/* the tick that marks each stage on the rule above it */
 .tv-chain li::before {
   content: ""; position: absolute; top: -1px; left: 0;
-  width: 26px; height: 2px; background: #5fd6ec;
+  width: 22px; height: 2px; background: #5fd6ec;
 }
+/* the numeral is the sequence, so give it real presence instead of a caption */
 .tv-chain li span {
-  display: block; margin-bottom: 9px;
-  font-size: 11.5px; font-weight: 700; letter-spacing: .14em;
-  color: rgba(143,214,232,.75);
+  display: block; margin-bottom: 7px;
+  font-size: 13px; font-weight: 700; letter-spacing: .16em;
+  color: #6fdcf0;
 }
 
-/* a quiet line for the product categories — present, but no longer the hero */
+/* product lines: a caption on the figure, well below the lead in weight */
 .tv .tv-lines {
-  font-size: .92rem; line-height: 1.7; color: rgba(206,226,240,.72);
-  max-width: 56ch; margin: 18px 0 0;
+  font-size: .82rem; line-height: 1.6; color: rgba(196,219,234,.72);
+  margin: 16px 0 0; max-width: 52ch;
 }
 
-.tv-turnkey__cta { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; margin-top: 30px; }
+.tv-turnkey__cta {
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+  margin-top: clamp(28px, 3.4vw, 38px);
+}
 .tv .tv-link--on-dark { color: #6fdcf0; }
 .tv .tv-link--on-dark:hover { color: #a5ecf9; }
 
-@media (max-width: 900px) {
+@media (max-width: 991px) {
   .tv-chain { grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
 @media (max-width: 560px) {
-  .tv-chain { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-chain { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px 18px; }
 }
 
 /* --------------------------------------------------------------------------
