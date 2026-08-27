@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 84" fill="none"
+     stroke="#0a1a2a" stroke-opacity=".075" stroke-width="0.85"
+     stroke-linecap="round" stroke-linejoin="round">
+  <title>Capacity range: three vessels discharging to a common collection header</title>
+
+  <!-- 300 L -->
+  <path d="M34 34 q0-9 12-9 h26 q12 0 12 9 v20 q0 9-12 9 h-26 q-12 0-12-9 z"/>
+  <path d="M46 25 v-6 M72 25 v-6"/>
+  <path d="M59 63 v9"/>
+
+  <!-- 2000 L -->
+  <path d="M146 24 q0-11 16-11 h34 q16 0 16 11 v30 q0 11-16 11 h-34 q-16 0-16-11 z"/>
+  <path d="M162 13 v-7 M196 13 v-7"/>
+  <path d="M179 65 v7"/>
+
+  <!-- 10,000 L -->
+  <path d="M282 12 q0-12 18-12 h46 q18 0 18 12 v42 q0 12-18 12 h-46 q-18 0-18-12 z"/>
+  <path d="M300 0 v-4 M346 0 v-4"/>
+  <path d="M323 66 v6"/>
+
+  <!-- common collection header -->
+  <path d="M14 72 h432"/>
+  <path d="M418 72 l-12-7 v14 z" fill="#0a1a2a" fill-opacity=".075" stroke="none"/>
+
+  <!-- isolation valve on the header -->
+  <path d="M240 72 l-13-8 v16 z M240 72 l13-8 v16 z"/>
+</svg>
