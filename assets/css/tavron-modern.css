@@ -91,11 +91,21 @@
 .tv-section--tight { padding: clamp(40px, 5vw, 68px) 0; }
 .tv-section--surface { background: var(--surface); }
 .tv-section--ink {
+  position: relative; overflow: hidden;
   background:
-    radial-gradient(1100px 480px at 88% -10%, rgba(10,162,190,.24), transparent 60%),
-    linear-gradient(160deg, #0a1a2a 0%, #10293d 55%, #0a1a2a 100%);
+    radial-gradient(900px 420px at 92% -12%, rgba(10,162,190,.26), transparent 62%),
+    radial-gradient(700px 460px at 4% 106%, rgba(10,162,190,.13), transparent 60%),
+    linear-gradient(158deg, #081727 0%, #12304a 52%, #081727 100%);
   color: #cfe0ec;
 }
+/* the process train the section is describing, laid across the band as ground.
+   Light strokes, since this one sits on dark rather than on the paper. */
+.tv-section--ink::before {
+  content: ""; position: absolute; inset: 0;
+  background: url("../img/bg/pid-plant-train.svg") center 62% / 1500px auto no-repeat;
+  opacity: .5; pointer-events: none;
+}
+.tv-section--ink > * { position: relative; }
 .tv-section--ink h2, .tv-section--ink h3, .tv-section--ink h4 { color: #fff; }
 .tv-section--ink p { color: rgba(214,230,241,.82); }
 
@@ -500,6 +510,49 @@
   font-variant-numeric: tabular-nums; }
 .tv-prod a.tv-prod__stretch::after { content: ""; position: absolute; inset: 0; }
 .tv-prod { position: relative; }
+
+/* --------------------------------------------------------------------------
+   Turnkey chain — the six stages one contract covers. Replaces a checkmark
+   list of product categories, which read as a slide rather than an argument.
+   -------------------------------------------------------------------------- */
+.tv-chain {
+  list-style: none; margin: clamp(38px, 5vw, 60px) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0;
+  border-top: 1px solid rgba(143,214,232,.22);
+}
+.tv-chain li {
+  position: relative;
+  padding: 22px 20px 4px 0;
+  font-family: var(--f-display); font-size: .98rem; font-weight: 600;
+  color: #eaf4f9; line-height: 1.35;
+}
+/* the tick that marks each stage on the rule above it */
+.tv-chain li::before {
+  content: ""; position: absolute; top: -1px; left: 0;
+  width: 26px; height: 2px; background: #5fd6ec;
+}
+.tv-chain li span {
+  display: block; margin-bottom: 9px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .14em;
+  color: rgba(143,214,232,.75);
+}
+
+/* a quiet line for the product categories — present, but no longer the hero */
+.tv .tv-lines {
+  font-size: .92rem; line-height: 1.7; color: rgba(206,226,240,.72);
+  max-width: 56ch; margin: 18px 0 0;
+}
+
+.tv-turnkey__cta { display: flex; gap: 22px; flex-wrap: wrap; align-items: center; margin-top: 30px; }
+.tv .tv-link--on-dark { color: #6fdcf0; }
+.tv .tv-link--on-dark:hover { color: #a5ecf9; }
+
+@media (max-width: 900px) {
+  .tv-chain { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 560px) {
+  .tv-chain { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
 
 /* --------------------------------------------------------------------------
    10. Stats

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 340" fill="none"
+     stroke="#8fd6e8" stroke-opacity=".16" stroke-width="1.4"
+     stroke-linecap="round" stroke-linejoin="round">
+  <title>Process train: balance tank, pasteuriser, evaporator effects, spray dryer, packing</title>
+
+  <!-- raw milk in -->
+  <path d="M20 150 h96"/>
+  <path d="M96 150 l-11-6 v12 z" fill="#8fd6e8" fill-opacity=".16" stroke="none"/>
+
+  <!-- balance tank -->
+  <path d="M116 104 h104 v70 q0 26-52 26 q-52 0-52-26 z"/>
+  <path d="M144 104 v-16 M192 104 v-16"/>
+  <path d="M168 200 v34 h96"/>
+
+  <!-- feed pump -->
+  <circle cx="292" cy="234" r="26"/>
+  <path d="M280 218 v32 l22-16 z"/>
+  <path d="M318 234 h58 v-84"/>
+
+  <!-- plate pasteuriser: stacked plates -->
+  <rect x="376" y="110" width="126" height="80" rx="4"/>
+  <path d="M396 110 v80 M416 110 v80 M436 110 v80 M456 110 v80 M476 110 v80" stroke-opacity=".1"/>
+  <path d="M502 150 h64"/>
+
+  <!-- evaporator: three calandria effects with vapour heads -->
+  <g>
+    <path d="M566 118 h44 v112 h-44 z"/>
+    <path d="M588 118 v-30 q0-14 16-14 h26"/>
+    <path d="M654 118 h44 v112 h-44 z"/>
+    <path d="M676 118 v-30 q0-14 16-14 h26"/>
+    <path d="M742 118 h44 v112 h-44 z"/>
+    <path d="M764 118 v-30 q0-14 16-14 h26"/>
+    <path d="M610 174 h44 M698 174 h44"/>
+  </g>
+  <path d="M786 174 h58"/>
+
+  <!-- spray dryer: chamber with conical base, and cyclone -->
+  <path d="M844 96 h112 v96 l-56 72 l-56-72 z"/>
+  <path d="M900 74 v22"/>
+  <circle cx="900" cy="62" r="12"/>
+  <path d="M900 264 v34 h84"/>
+
+  <path d="M1010 128 h56 v58 l-28 44 l-28-44 z"/>
+  <path d="M1038 108 v20"/>
+  <path d="M956 128 h54"/>
+  <path d="M1038 230 v68 h-54"/>
+
+  <!-- fluid bed -->
+  <rect x="1084" y="252" width="118" height="46" rx="5"/>
+  <path d="M1104 298 v18 M1140 298 v18 M1176 298 v18" stroke-opacity=".1"/>
+  <path d="M1202 276 h58"/>
+
+  <!-- packing -->
+  <path d="M1260 244 h84 v64 h-84 z"/>
+  <path d="M1260 268 h84" stroke-opacity=".1"/>
+  <path d="M1302 244 v-28"/>
+  <path d="M1344 276 h44"/>
+  <path d="M1376 276 l-11-6 v12 z" fill="#8fd6e8" fill-opacity=".16" stroke="none"/>
+
+  <!-- instrument bubbles tagged onto the train -->
+  <circle cx="440" cy="256" r="22"/>
+  <path d="M418 256 h44" stroke-opacity=".1"/>
+  <path d="M440 234 v-44" stroke-opacity=".12" stroke-dasharray="5 6"/>
+
+  <circle cx="676" cy="286" r="22"/>
+  <path d="M654 286 h44" stroke-opacity=".1"/>
+  <path d="M676 264 v-34" stroke-opacity=".12" stroke-dasharray="5 6"/>
+
+  <circle cx="900" cy="24" r="22"/>
+  <path d="M878 24 h44" stroke-opacity=".1"/>
+  <path d="M900 46 v4" stroke-opacity=".12" stroke-dasharray="5 6"/>
+</svg>
