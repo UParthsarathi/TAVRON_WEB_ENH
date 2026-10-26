@@ -344,10 +344,13 @@
   isolation: isolate;
 }
 /* copy on white on the left, the photo uncovered on the right half */
-.tv-hero__media { position: absolute; inset: 0 0 0 50%; z-index: -2; }
+/* starts below the fixed header so nothing in the photo hides behind it */
+.tv-hero__media { position: absolute; inset: 76px 0 0 50%; z-index: -2; }
 .tv-hero__slide {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
+  background-size: cover;
+  /* per-slide focal point, so the Tavron mark on the equipment stays in frame */
+  background-position: var(--pos, center);
   opacity: 0;
   transform: scale(1.08);
   transition: opacity 1.5s ease, transform 9s linear;
@@ -551,7 +554,7 @@
   background: linear-gradient(150deg, var(--surface-2), var(--surface));
 }
 .tv-prod__media img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center;
+  width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center);
   transition: transform .5s var(--ease);
 }
 .tv-prod:hover .tv-prod__media img { transform: scale(1.06); }
@@ -588,14 +591,14 @@
   position: relative; margin: 0; aspect-ratio: 4/3; overflow: hidden;
   border-radius: var(--r-md); box-shadow: var(--shadow-sm);
 }
-.tv-ind img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-ind img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, center); display: block; }
 .tv-ind figcaption {
   position: absolute; inset: auto 0 0; padding: 48px 22px 18px;
   background: linear-gradient(180deg, rgba(10,26,42,0), rgba(10,26,42,.78));
   color: #fff; font-family: var(--f-display); font-weight: 650; font-size: 1.12rem;
 }
 @media (max-width: 700px) {
-  .tv-grid--3.tv-inds { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .tv-grid--4.tv-inds { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
   .tv-ind figcaption { padding: 32px 14px 12px; font-size: .95rem; }
 }
 
@@ -991,6 +994,7 @@
   .tv-hero { min-height: auto; padding: 360px 0 76px; }
   /* the photo moves above the copy */
   .tv-hero__media { inset: 76px 0 auto 0; height: 260px; }
+  .tv-hero__slide { background-position: var(--pos-m, var(--pos, center)); }
   .tv-split { grid-template-columns: 1fr; }
   .tv-split--flip > *:first-child { order: 0; }
   .tv-split__figure::before { display: none; }
@@ -1178,7 +1182,7 @@
   font: 700 15px/1 var(--f-display); box-shadow: 0 4px 12px rgba(0,0,0,.25);
 }
 /* hero slides start under the fixed header */
-.tv-numbered .tv-hero__slide::after { top: 84px; left: 16px; }
+.tv-numbered .tv-hero__slide::after { top: 16px; left: 16px; }
 @media (max-width: 991px) {
   .tv-numbered .tv-hero__slide::after { top: 12px; }
 }

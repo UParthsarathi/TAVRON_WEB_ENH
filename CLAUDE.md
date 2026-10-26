@@ -83,7 +83,7 @@ specifications, capacities, standards, certifications or client names.** If a nu
 is not in the repo or in a document the client supplied, ask rather than guess.
 
 Facts that are established and safe to reuse: ISO 9001:2015 certified, founded 2004,
-Chennai, 20,000 sq.ft factory, 5,500 sq.ft shop floor, ~74 client logos in
+Chennai, 30,000 sq.ft factory, 5,500 sq.ft shop floor, 400+ customers, ~74 client logos in
 `assets/img/clients/`.
 
 ## Known repo quirks
