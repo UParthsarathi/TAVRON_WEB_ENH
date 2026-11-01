@@ -766,23 +766,9 @@
 }
 .tv-lightbox__close:hover { background: rgba(255,255,255,.22); }
 
-/* sticky enquiry bar (product page) */
-.tv-stickybar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
-  background: rgba(255,255,255,.94);
-  backdrop-filter: saturate(180%) blur(14px);
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -6px 26px rgba(10,26,42,.08);
-  padding: 12px 0;
-  transform: translateY(110%);
-  transition: transform .35s var(--ease);
-}
-.tv-stickybar.is-visible { transform: translateY(0); }
-.tv-stickybar__inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
-.tv-stickybar__actions { display: flex; gap: 10px; flex-wrap: wrap; }
 /* --------------------------------------------------------------------------
    Floating action, bottom right. WhatsApp only — these two pages drop the
-   template's back-to-top arrow. The sticky bar lifts it clear.
+   template's back-to-top arrow.
    Inline SVG glyph rather than an icon font, so this does not depend on
    which icon sets a page happens to link.
    -------------------------------------------------------------------------- */
@@ -792,7 +778,7 @@
   display: grid; place-items: center;
   background: #25d366; color: #fff;
   box-shadow: 0 4px 14px rgba(10,26,42,.22), 0 2px 4px rgba(10,26,42,.12);
-  transition: transform .22s var(--ease), box-shadow .22s var(--ease), bottom .35s var(--ease);
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease);
 }
 .tv .tv-wa svg { width: 30px; height: 30px; display: block; }
 .tv .tv-wa:hover {
@@ -801,15 +787,10 @@
 }
 .tv .tv-wa:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
-/* the sticky bar floats over the foot of the page; lift the button clear */
-.tv .tv-stickybar.is-visible ~ .tv-wa { bottom: 88px; }
-
 @media (prefers-reduced-motion: reduce) {
   .tv .tv-wa { transition: none; }
   .tv .tv-wa:hover { transform: none; }
 }
-.tv-stickybar strong { font-family: var(--f-display); color: var(--ink); font-size: 1rem; display: block; line-height: 1.3; }
-.tv-stickybar span { font-size: 12.5px; color: var(--muted); }
 
 /* --------------------------------------------------------------------------
    13. Footer polish (scoped)
@@ -1005,7 +986,6 @@
   .tv-cta { flex-direction: column; align-items: flex-start; }
   .tv-hero__cta .tv-btn, .tv-cta__actions .tv-btn { flex: 1 1 auto; }
   .tv-viewer__thumbs button { width: 62px; height: 50px; }
-  .tv-stickybar__inner { justify-content: center; text-align: center; }
 }
 
 /* --------------------------------------------------------------------------
@@ -1027,6 +1007,9 @@
   /* white sheets on a tinted ground: soft edge, no hairline. A 1px border against
      this much contrast is what read as sharp, so the shadow does the separating. */
   --doc-sheet:  0 1px 2px rgba(10,26,42,.05), 0 6px 18px rgba(10,26,42,.07);
+  /* photos and drawings sit on this, not on white. Paired with mix-blend-mode:
+     multiply, a white photo backdrop dissolves into it, so there is no visible box. */
+  --photo-ground: linear-gradient(160deg, var(--surface), var(--surface-2));
 
   padding: 118px 0 84px;
   background:
@@ -1047,7 +1030,8 @@
 
 .tv-doc__title { font-size: clamp(1.85rem, 3.3vw, 2.5rem); margin: 0 0 16px; }
 /* `.tv p` is (0,1,1) and beats a bare class — prefix anything that sets colour on a <p>. */
-.tv .tv-doc__intro { font-size: 1.15rem; line-height: 1.62; color: var(--ink-3); max-width: 56ch; margin: 0 0 48px; }
+.tv .tv-doc__intro { font-size: 1.15rem; line-height: 1.62; color: var(--ink-3); max-width: 72ch; margin: 0 0 24px; text-wrap: pretty; }
+.tv-doc__cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 44px; }
 .tv .tv-doc__note { font-size: .95rem; line-height: 1.6; color: var(--slate); max-width: 64ch; margin: -4px 0 26px; }
 
 .tv .tv-doc__label {
@@ -1066,13 +1050,17 @@
 
 /* flatten the image viewer inside the doc layer */
 .tv-doc .tv-viewer__stage {
-  background: #fff; border: 0;
-  border-radius: var(--r-md); box-shadow: var(--doc-sheet); padding: 26px;
+  background: var(--photo-ground); border: 0; isolation: isolate;
+  border-radius: var(--r-md); box-shadow: var(--doc-sheet); padding: 0;
+  aspect-ratio: 4/3;
 }
+.tv-doc .tv-viewer__stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
 .tv-doc .tv-viewer__thumbs button {
-  border-radius: 9px; background: var(--paper); border: 2px solid transparent;
+  border-radius: 9px; background: var(--photo-ground); border: 2px solid transparent;
   box-shadow: var(--doc-sheet); opacity: 1; width: 66px; height: 52px;
+  padding: 0; overflow: hidden; isolation: isolate;
 }
+.tv-doc .tv-viewer__thumbs button img { object-fit: cover; mix-blend-mode: multiply; display: block; }
 .tv-doc .tv-viewer__thumbs button:hover { transform: none; border-color: rgba(0,174,239,.35); }
 .tv-doc .tv-viewer__thumbs button[aria-selected="true"] { border-color: var(--accent-600); }
 
@@ -1092,7 +1080,11 @@
 .tv-doc__sec {
   border-top: 1px solid var(--line); margin-top: 56px;
   padding-top: 40px; padding-bottom: 0;   /* style.css sets 60px on all <section> */
+  overflow: visible;                      /* ...and overflow: hidden, which clips the sheet shadows */
 }
+.tv .tv-doc__h2 { font-size: clamp(1.35rem, 2.2vw, 1.7rem); margin: -8px 0 22px; }
+.tv .tv-doc__h3 { font-size: 1.1rem; margin: 0 0 2px; }
+.tv .tv-tablewrap + .tv-doc__note { margin: 12px 0 0; }
 /* Each section carries a drawing detail in the open band beside its label.
    Put on the section itself, not a full-bleed pseudo-element, so the motif
    lines up with the content column without any 100vw arithmetic. */
@@ -1100,17 +1092,10 @@
   background-repeat: no-repeat;
 }
 /* capacity range: three vessels on a common header */
-.tv-doc__sec:nth-of-type(1) {
+.tv-doc__sec--range {
   background-image: url("../img/bg/pid-size-range.svg");
-  background-position: right -60px top -14px;
-  background-size: 1180px auto;
-}
-/* GA detail: vessel elevation carrying the same A and B dimensions as the
-   drawings printed below it */
-.tv-doc__sec:nth-of-type(2) {
-  background-image: url("../img/bg/pid-dim-detail.svg");
-  background-position: right -110px top 10px;
-  background-size: 1320px auto;
+  background-position: right -60px top 6px;
+  background-size: 720px auto;
 }
 @media (max-width: 900px) {
   .tv-doc__sec { background-image: none; }
@@ -1137,18 +1122,100 @@
   overflow: hidden; margin: 0;
 }
 
+/* first-screen photo, edge to edge */
+.tv-doc__photo { position: relative; }
+.tv-doc__photo img { width: 100%; }
+
+/* capacity band: photo edge to edge on one side, the next step on the other */
 .tv-doc__ask {
-  background: var(--paper); border: 0;
-  border-radius: var(--r-md); box-shadow: var(--doc-sheet);
-  margin: 56px 0 0; padding: 34px 32px;
-  display: flex; gap: 30px; justify-content: space-between; align-items: center; flex-wrap: wrap;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  margin: 56px 0 0; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0,360px) minmax(0,1fr); align-items: stretch;
 }
+.tv-doc__ask-photo { position: relative; margin: 0; }
+.tv-doc .tv-doc__ask img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-doc__ask > div { padding: 30px 32px; align-self: center; }
 .tv-doc__ask h2 { font-size: 1.3rem; margin: 0 0 6px; }
-.tv .tv-doc__ask p { color: var(--slate); margin: 0; max-width: 52ch; font-size: .95rem; }
-.tv-doc__ask > div:last-child { display: flex; gap: 12px; flex-wrap: wrap; }
+.tv .tv-doc__ask p { color: var(--slate); margin: 0 0 18px; max-width: 60ch; font-size: .98rem; }
+.tv-doc__ask .tv-doc__cta { margin: 0; }
+
+.tv-flow {
+  margin: 0; background: var(--paper); padding: 22px 26px 16px;
+  border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-flow svg { display: block; width: 100%; height: auto; }
+.tv-flow figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+.tv-flow__line { fill: none; stroke: var(--ink-3); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.tv-flow__thin { stroke-width: 1.6; }
+.tv-flow__solid { fill: var(--surface); }
+.tv-flow__milk { fill: var(--accent-050); stroke: none; }
+.tv-flow__plate { fill: none; stroke: var(--accent); stroke-width: 7; stroke-dasharray: 12 5; }
+.tv-flow__leader { stroke: var(--slate); stroke-width: 1.4; }
+.tv-flow__cold { fill: none; stroke: var(--accent-600); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-flow__warm { fill: none; stroke: var(--amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-flow__label { fill: var(--ink-2); font: 600 17px var(--f-body); text-anchor: middle; }
+
+/* Know more: extra detail on a spec row, opened in place */
+.tv-more { margin-top: 4px; }
+.tv-more summary, .tv-faq summary { cursor: pointer; list-style: none; }
+.tv-more summary::-webkit-details-marker, .tv-faq summary::-webkit-details-marker { display: none; }
+.tv-more summary {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .875rem; font-weight: 650; color: var(--accent-700);
+}
+.tv-more summary:hover { color: var(--accent-600); }
+.tv-more summary:focus-visible, .tv-faq summary:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 2px; border-radius: 4px; }
+.tv-more summary i, .tv-faq summary i { transition: transform .2s var(--ease); line-height: 1; }
+.tv-more[open] summary i, .tv-faq details[open] summary i { transform: rotate(180deg); }
+.tv .tv-more p {
+  margin: 8px 0 4px; padding-left: 12px; border-left: 2px solid var(--accent);
+  font-size: .95rem; line-height: 1.6; color: var(--slate);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-more summary i, .tv-faq summary i { transition: none; }
+}
+
+/* sizes: one photo per tank type, then the whole range in a single table */
+.tv-sizes { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-bottom: 28px; }
+.tv-size__frame, .tv-size .tv-viewer { margin: 0 0 14px; }
+.tv-size__frame {
+  position: relative; aspect-ratio: 4/3; overflow: hidden; isolation: isolate;
+  background: var(--photo-ground); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-doc .tv-size__frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; mix-blend-mode: multiply;
+}
+.tv .tv-size p { margin: 0 0 6px; font-size: .95rem; color: var(--slate); }
+/* --accent-700 is only 4.3:1 on the page ground; --doc-label clears AA */
+.tv .tv-size .tv-link { color: var(--doc-label); }
+.tv .tv-size .tv-link:hover { color: var(--ink); }
+/* second view of the closed tank: small thumbs sit on the photo, so all three cards stay level */
+.tv-size .tv-viewer__thumbs { position: absolute; left: 10px; bottom: 10px; margin: 0; gap: 6px; }
+.tv-doc .tv-size .tv-viewer__thumbs button { width: 52px; height: 40px; }
+
+/* FAQ, in the same open-in-place pattern as Know more */
+.tv-faq { background: var(--paper); padding: 4px 26px; border-radius: var(--r-md); box-shadow: var(--doc-sheet); }
+.tv-faq details + details { border-top: 1px solid var(--line); }
+.tv-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; }
+.tv-faq summary i { color: var(--accent-700); font-size: 20px; }
+.tv .tv-faq h3 { font-size: 1rem; font-weight: 650; line-height: 1.4; margin: 0; }
+.tv .tv-faq p { margin: 0 0 18px; font-size: .98rem; line-height: 1.65; color: var(--ink-2); }
+
+/* downloads and related products: plain link rows on a sheet */
+.tv .tv-doc__links {
+  list-style: none; margin: 0; padding: 4px 26px;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-doc__links li + li { border-top: 1px solid var(--line); }
+.tv-doc__links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; font-weight: 650; }
+.tv .tv-doc__links + .tv-doc__label { margin-top: 28px; }
 
 @media (max-width: 900px) {
   .tv-doc { padding-top: 96px; padding-bottom: 60px; }
+  .tv-sizes { gap: 16px; }
+  .tv-faq, .tv .tv-doc__links { padding-inline: 18px; }
+  .tv-flow { padding: 16px 16px 12px; }
   .tv-doc__top { grid-template-columns: 1fr; gap: 36px; }
   .tv-doc__pair { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; gap: 22px; }
   .tv-doc__dl > div { grid-template-columns: 1fr; gap: 3px; }
@@ -1159,23 +1226,38 @@
       url("../img/bg/pid-dx-loop.svg") right -190px top 88px / 780px auto no-repeat,
       var(--doc-ground);
   }
-  .tv-doc__ask { padding: 26px 22px; }
+  .tv-doc__ask { grid-template-columns: 1fr; }
+  .tv-doc .tv-doc__ask img { height: auto; aspect-ratio: 3/2; }
+  .tv-doc__ask > div { padding: 22px; }
+}
+@media (max-width: 520px) {
+  .tv-sizes { grid-template-columns: 1fr; }
+  .tv-doc .tv-table thead th, .tv-doc .tv-table tbody th, .tv-doc .tv-table tbody td { padding-inline: 12px; }
+  .tv-doc__ask > div:first-child { flex-basis: 100%; }
+  /* full-width buttons read as the page's next step on a phone */
+  .tv .tv-doc__cta .tv-btn { flex: 1 1 100%; }
 }
 
 
 /* --------------------------------------------------------------------------
    18. Image numbers for client review — .tv-numbered on <body> badges every
-   photo in page order, so feedback can say "swap image 7". On for index.html
-   while the client reviews; drop the class from its <body> to remove them.
+   photo in page order, so feedback can say "swap image 7". On for index.html and
+   bulkCoolers.html while the client reviews; drop the class from their <body> to remove them.
    -------------------------------------------------------------------------- */
 .tv-numbered { counter-reset: tv-img; }
-.tv-numbered :is(.tv-hero__slide, .tv-ind, .tv-prod__media, .tv-split__figure)::after {
+.tv-numbered :is(.tv-hero__slide, .tv-ind, .tv-prod__media, .tv-split__figure, .tv-doc__photo, .tv-size__frame, .tv-doc__ask-photo, .tv-viewer__thumbs button)::after {
   counter-increment: tv-img; content: counter(tv-img);
   position: absolute; top: 12px; left: 12px; z-index: 2;
   min-width: 34px; height: 34px; padding: 0 8px; border-radius: 999px;
   display: grid; place-items: center;
   background: #00AEEF; color: #0A1A2A; border: 2px solid #fff;
   font: 700 15px/1 var(--f-display); box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+/* the closed tank's two views are numbered on their thumbnails, which need a smaller badge */
+.tv-numbered .tv-viewer__thumbs button { position: relative; }
+.tv-numbered .tv-viewer__thumbs button::after {
+  top: 2px; left: 2px; min-width: 18px; height: 18px; padding: 0 4px;
+  border-width: 1px; font-size: 11px;
 }
 /* hero slides start under the fixed header */
 .tv-numbered .tv-hero__slide::after { top: 84px; left: 16px; }

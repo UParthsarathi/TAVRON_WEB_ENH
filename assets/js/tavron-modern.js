@@ -161,9 +161,10 @@
 
     triggers.forEach(function (t) {
       t.style.cursor = "zoom-in";
-      t.addEventListener("click", function () {
+      t.addEventListener("click", function (e) {
+        e.preventDefault();
         img.src = t.getAttribute("data-lightbox") || t.getAttribute("src");
-        img.alt = t.getAttribute("alt") || "";
+        img.alt = t.getAttribute("alt") || t.getAttribute("aria-label") || "";
         box.classList.add("is-open");
         document.body.style.overflow = "hidden";
       });
@@ -175,21 +176,6 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") close();
     });
-  }
-
-  /* ------------------------------------------------------------------
-   * Sticky enquiry bar — appears after the hero scrolls away
-   * ---------------------------------------------------------------- */
-  function initStickyBar() {
-    var bar = document.querySelector(".tv-stickybar");
-    if (!bar) return;
-    var anchor = document.querySelector(".tv-phero, .tv-doc__top");
-    var trigger = anchor ? anchor.offsetHeight : 500;
-    var onScroll = function () {
-      bar.classList.toggle("is-visible", window.scrollY > trigger);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
   }
 
   /* ------------------------------------------------------------------
@@ -211,7 +197,6 @@
     initHero();
     initViewer();
     initLightbox();
-    initStickyBar();
     initMarquee();
     initHeader();
   }
