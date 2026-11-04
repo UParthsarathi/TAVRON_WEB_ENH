@@ -33,10 +33,21 @@ The redesign is **opt-in per page** and scoped to `<body class="tv">`. Every rul
 `tavron-modern.css` is prefixed with `.tv`, so pages without that class are
 completely unaffected and keep the old green template look.
 
-Pages currently on the modern layer:
+Every page in the repo root is now on the modern layer. `index.html` uses the
+landing-page kit; every other page uses the document layer (`.tv-doc`, sections 17
+and 19 of `tavron-modern.css`): breadcrumb, title, intro, a photo beside a spec
+sheet (`.tv-doc__dl`), then sections of equipment cards (`.tv-items` / `.tv-item`),
+tables, running text (`.tv-doc__prose`) and figures (`.tv-doc__fig`). Plant and
+general pages add `.tv-doc--train` for the process-train ground; the refrigeration
+pages keep the DX loop. Most of that copy is the old pages' text tightened up,
+waiting for client-supplied content as `bulkCoolers.html` got.
 
-- `index.html`
-- `bulkCoolers.html`
+`plateheat.html`, `milkprocessing.html` and `about.html` are hand-written on a
+newer direction, the drawing-sheet layer (`.tv-sp`, section 20): each opens on an
+engineering drawing of its own subject in inline SVG, with numbered balloons, a
+parts list and a title block. Drawing colour is semantic (cyan product, amber
+heat, indigo ice water, dashed ink CIP). The drawings are simplified schematics
+built only from facts in the copy; have the client's engineer check each one.
 
 To migrate another page, add three things:
 
