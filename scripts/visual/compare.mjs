@@ -1,4 +1,6 @@
-// Compare two capture runs. Exit 1 unless every screenshot is 0 differing pixels and every markup file is equal.
+// Compare two capture runs. Markup must be equal (the gate). Screenshots are a visual check: pixels
+// count as different only beyond pixelmatch's colour threshold, and anti-aliasing is ignored, because
+// Chrome's text anti-aliasing is not stable between two captures of the same page.
 //   node scripts/visual/compare.mjs --a .migration/reference --b .migration/candidate
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -11,6 +13,9 @@ const { values: arg } = parseArgs({
     a: { type: "string", default: ".migration/reference" },
     b: { type: "string", default: ".migration/candidate" },
     diff: { type: "string", default: ".migration/diff" },
+    threshold: { type: "string", default: "0.1" }, // pixelmatch colour distance, 0..1
+    // Reference vs reference left up to 86 stray glyph pixels in nav text (2026-11-08).
+    "max-px": { type: "string", default: "150" },
   },
 });
 
@@ -46,8 +51,8 @@ for (const page of readdirSync(arg.a, { withFileTypes: true }).filter((d) => d.i
     }
     if (a.data.equals(b.data)) continue;
     const out = new PNG({ width: a.width, height: a.height });
-    const n = pixelmatch(a.data, b.data, out.data, a.width, a.height, { threshold: 0, includeAA: true });
-    if (n === 0) continue;
+    const n = pixelmatch(a.data, b.data, out.data, a.width, a.height, { threshold: Number(arg.threshold), includeAA: false });
+    if (n <= Number(arg["max-px"])) continue;
     mkdirSync(join(arg.diff, page), { recursive: true });
     writeFileSync(join(arg.diff, page, file), PNG.sync.write(out));
     fails.push(`${id}: ${n} px differ -> ${join(arg.diff, page, file)}`);

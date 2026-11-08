@@ -1,0 +1,6 @@
+/* Tailwind v4 without Preflight: Preflight resets margins, borders and images and would change the
+   design. Not imported yet, because an extra stylesheet changes the page markup. Import it from
+   app/layout.tsx with the first utility class. */
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

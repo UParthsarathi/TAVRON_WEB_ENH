@@ -87,9 +87,12 @@ function snapshot() {
   out.push(`body ${attrs(document.body)}`);
   // The legacy site appends .tv-lightbox (DOMContentLoaded) and .mobile-nav (after an AJAX load)
   // in whichever order the race goes, so the lightbox is listed last, wherever it really is.
+  // Next.js always renders an empty <div hidden> first in <body>, the outlet it streams metadata
+  // into (the tags themselves are hoisted to <head>). It has no rendering, so it is skipped.
+  const nextOutlet = (c) => c.tagName === "DIV" && c.attributes.length === 1 && c.hasAttribute("hidden") && !c.children.length;
   const ordered = (node) => {
-    const kids = [...node.childNodes];
-    if (node !== document.body) return kids;
+    if (node !== document.body) return [...node.childNodes];
+    const kids = [...node.childNodes].filter((c) => !nextOutlet(c));
     return [...kids.filter((c) => !c.classList?.contains("tv-lightbox")), ...kids.filter((c) => c.classList?.contains("tv-lightbox"))];
   };
   const walk = (node, depth) => {

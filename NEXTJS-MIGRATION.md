@@ -23,27 +23,29 @@ reverted, not argued.
 
 Update this table at the end of every session.
 
-| Step | What | Session | State | Commit |
-|---|---|---|---|---|
-Sessions were re-planned on 2026-11-08: about **4 sessions** for Steps 2–8.
+Sessions were re-planned on 2026-11-08: about **4 sessions** for Steps 2–8. Session 1
+also finished Step 5, so about **2 more**.
 
 | Step | What | Session | State | Commit |
 |---|---|---|---|---|
 | 0 | Branch `nextjs`, tag `legacy-html` | – | done | `51c0dcc` |
-| 1 | Visual test harness (screenshots + page markup) | – | written; `compare.mjs` still uses the old 0-pixel gate, switch it to the markup gate when first used | `51c0dcc` |
-| 2 | `next/` folder: Next.js scaffold, static files copied into `next/public/`, `.html` URLs kept | 1 | not started | |
-| 3 | Root layout, Header, Footer, mobile nav as components | 1 | not started | |
-| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | not started | |
-| 5 | Convert the other 34 pages | 2 | not started | |
-| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 3 | not started | |
-| 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 4 | not started | |
-| 8 | Production build, Lighthouse before/after, preview deploy | 4 | not started | |
+| 1 | Visual test harness (screenshots + page markup) | – | done; markup gate + pixel tolerance since session 1 | `51c0dcc`, session 1 |
+| 2 | `next/` folder: Next.js scaffold, static files copied into `next/public/`, `.html` URLs kept | 1 | done | session 1 |
+| 3 | Root layout, Header, Footer, mobile nav as components | 1 | done | session 1 |
+| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | done | session 1 |
+| 5 | Convert the other 34 pages | 1 | done, all 35 pages × all states match | session 1 |
+| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | not started | |
+| 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 3 | not started | |
+| 8 | Production build, Lighthouse before/after, preview deploy | 3 | not started | |
 
-Could stretch to 5–6 sessions if the converter meets many one-off page quirks (Step 5)
-or the menu and contact form need extra care (Step 6). Going live waits on the user.
+"session 1" in the Commit column = the 2026-11-08 Session 1 commit on `nextjs` (see the log).
 
-**Next action:** Session 1 = Steps 2, 3, 4. Ends with `bulkCoolers.html` running in
-Next.js with markup identical to the old page.
+Could stretch if the menu and contact form need extra care (Step 6). Going live waits on
+the user.
+
+**Next action:** Session 2 = Step 6. Read "Interim behaviour" under Decisions and the
+Session 1 log entry first. Ends with `components/LegacyScripts.tsx` deleted, no jQuery
+loaded, and the full diff still 348/348.
 
 ## How to resume in a new session
 
@@ -78,6 +80,11 @@ rebuilt from the `legacy-html` tag. Nothing load-bearing lives in a session scra
 | `tavron-web` folder | `C:\Users\pavan\Tavron\tavron-web` (Oct 22, Supabase + admin, no design, new URLs) is **not** used. Parked; its CMS/admin ideas could be a phase after the port | It is a different product, not a translation |
 | Converter | Node script using `parse5` (spec-compliant HTML parser) | Produces the exact tree a browser builds (implied `<tbody>`, closed `<p>`), so the JSX matches the real DOM |
 | Test tooling | `playwright-core` driving the installed Chrome (no browser download), `pixelmatch` + `pngjs` | Small dev dependencies only |
+| Tailwind import (session 1) | Installed (`tailwindcss`, `@tailwindcss/postcss`, `postcss.config.mjs`, `app/tailwind.css` without Preflight) but **not imported** | Importing adds a `/_next/static/css` `<link>` to `<head>`, which changes the markup. Import it with the first utility class |
+| Head order (session 1) | Each page renders its own `<title>`, meta and canonical; the layout renders the favicon and preconnect links *after* `{children}` in `<body>`; stylesheets stay in the layout's `<head>`. No `metadata` export | React 19 hoists title/meta/link into `<head>` in render order, ahead of the stylesheets. Next's metadata API reorders tags and drops `og:type=product` |
+| Viewport (session 1) | `viewport` export with `initialScale: "1.0"` (string cast) | The old pages say `initial-scale=1.0`; a number serialises as `1` |
+| `data-aos-*` on `<body>` (session 1) | Rendered statically by the layout (`ease`, `1000`, `0`) | `AOS.init()` in `main.js` left them on every old page, so they are in the reference markup. Nothing uses them; removing them is a separate decision |
+| Interim behaviour (session 1, until Step 6) | `components/LegacyScripts.tsx` loads, **after hydration**, `jquery`, `jquery.easing`, `validate.js`, then attaches the 3 mobile-nav handlers copied unchanged from `main.js`, then loads `tavron-modern.js`. `main.js` itself is not loaded | `main.js` would inject the header a second time and clone a second mobile nav. Before hydration, `tavron-modern.js` would edit the DOM React is about to adopt (the marquee duplication would force a client re-render). The rest of the vendor block only served `main.js` (finding 9); leaving it out changed no markup and no pixel |
 
 ## What the port must reproduce (found by reading the code)
 
@@ -147,7 +154,9 @@ Lives in `scripts/visual/`. Output goes to `.migration/` (git-ignored).
 npm run legacy:export                    # .migration/legacy = files of the legacy-html tag
 npm run legacy:serve                     # http://localhost:8000 (leave running)
 npm run visual:capture -- --out .migration/reference
-# candidate (from Step 2 on): next build && next start -p 3000, then
+# candidate: regenerate the pages, build, serve on 3000
+npm run convert                          # root *.html + templates/ -> next/app, next/components/generated
+cd next && npm ci && npx next build && npx next start -p 3000   # (leave running)
 npm run visual:capture -- --base http://localhost:3000 --out .migration/candidate
 npm run visual:compare -- --a .migration/reference --b .migration/candidate
 # one page while iterating:  add  --pages bulkCoolers.html  to the candidate capture
@@ -155,9 +164,11 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
 
 - **Server:** `scripts/visual/serve.mjs`, not `python -m http.server`. Python's listen
   backlog is 5, so parallel captures got `ERR_CONNECTION_REFUSED` on random files.
-- **Compare:** *as written:* byte-equal pixels, else `pixelmatch` with threshold 0 and
-  anti-aliasing counted. *To change (2026-11-08):* markup equality is the pass/fail;
-  pixels use a small tolerance with anti-aliasing ignored. The report lists every non-zero result and writes a diff PNG to `.migration/diff/`.
+- **Compare:** markup must be equal line for line (the gate). Screenshots: `pixelmatch`
+  with colour threshold 0.1 and anti-aliasing ignored, at most 150 differing pixels per
+  shot (`--threshold`, `--max-px`). Reference vs reference left up to 86 stray glyph
+  pixels in nav text on 2026-11-08; `--max-px 0` shows the raw counts. Every failure
+  writes a diff PNG to `.migration/diff/`.
   It also flags console errors and failed requests that the candidate has and the
   reference does not, and any horizontal overflow.
 - **Captured per page, at 1440×900 and 390×844, DPR 1:**
@@ -221,9 +232,14 @@ converter (not the output by hand), and re-run until everything matches.
 
 **Step 6 – Behaviour in React.** Small client components replace jQuery: header solid on
 scroll, reveal, hero crossfade, viewer, lightbox, marquee, mobile nav (slideToggle
-re-done with the Web Animations API, same 300 ms and swing easing), contact form (same
-validation, same endpoint, same messages). Delete `main.js`, `tavron-modern.js`,
-`validate.js` and the jQuery script tags.
+re-done with the Web Animations API, same 300 ms; note that `jquery.easing` is loaded, which
+turns jQuery's `swing` into `easeOutQuad`, so that is the curve to match), contact form
+(same validation, same endpoint, same messages). Delete `components/LegacyScripts.tsx`; the
+old files in `public/` stay until Step 7.
+First extend `capture.mjs` to write markup in every interaction state too (today it writes
+it once, initial state at 1440). Until now the behaviour was the old jQuery code itself;
+from Step 6 on, inline styles and classes left by the menu, overlay, viewer and lightbox
+have to be proven equal.
 *Done when:* every interaction state matches, no console errors, and the form test-posts
 successfully (ask before sending a real email).
 
@@ -276,3 +292,30 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
   pages translated by script; proof is matching markup, screenshots with tolerance (the
   0-pixel gate was the blocker); `tavron-web` not used; ~4 sessions. The user said
   "leave it" to chasing the screenshot determinism. Next: Session 1 (Steps 2–4).
+- 2026-11-08, Session 1: **Steps 2–5 done.**
+  - Harness: reference captured twice; markup identical on all 35 pages. `compare.mjs`
+    switched to the markup gate plus pixel tolerance (see "Compare"). `capture.mjs` skips
+    Next's empty `<div hidden>` metadata outlet, which Next always renders first in
+    `<body>` and no config removes. No old page has a `<div hidden>` at body level.
+  - Step 2: `next/` with its own `package.json` (Next 16.4.5, React 19.3.1, TypeScript
+    5.9, Tailwind 4.3.5 not imported, see Decisions). Static files and `.well-known/`
+    copied into `public/`, byte-identical (checked over HTTP, including both remixicon
+    name forms). `next/vercel.json` copied; `next/.vercelignore` keeps `old-site/` out of
+    the deploy as the root one does today. 404 for unknown `.html` works.
+  - Steps 3–4: `npm run convert` (`scripts/convert/html-to-jsx.mjs`, parse5) writes
+    `next/app/*/page.tsx` and `next/components/generated/{Header,Footer}.tsx`. It refuses
+    a page whose `<html>`/`<body>` attributes, charset/viewport, shared head tail or
+    script block differ from the others, so nothing is dropped silently. Hand-written:
+    `app/layout.tsx`, `components/MobileNav.tsx`, `components/LegacyScripts.tsx`.
+    Fixes the pilot needed: head order, viewport `1.0`, `data-aos-*` on body (all in
+    Decisions).
+  - Step 5: the other 34 pages passed on the first run, without converter changes.
+  - Result: candidate vs reference **348/348 checks**, all 35 pages × all states, no new
+    console errors or failed requests, no overflow. With `--max-px 0` only one shot has
+    any differing pixels: `tubularheat/full-1440`, 86 px, the same count as reference vs
+    reference (Chrome glyph jitter).
+  - Gotcha: on this machine `netstat` did not show the `next start` listener, so a
+    "restarted" server kept serving the old build and the new one died with EADDRINUSE.
+    Find it with `Get-CimInstance Win32_Process -Filter "Name='node.exe'"`, stop it by
+    PID, and curl for something only the new build has before capturing.
+  - Next: Session 2 = Step 6.

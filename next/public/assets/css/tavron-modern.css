@@ -1,0 +1,1651 @@
+/* ==========================================================================
+   Tavron Engineers — Modern Layer
+   Scoped to <body class="tv"> so legacy pages are completely unaffected.
+   Author: 2026 refresh
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+.tv {
+  /* Brand — deep steel navy + Tavron cyan #00AEEF. The darker cyans are the
+     same hue, stepped down until they pass AA as text. */
+  --ink:        #0a1a2a;
+  --ink-2:      #12293e;
+  --ink-3:      #1d3d59;
+  --slate:      #3f5468;
+  --muted:      #445972;
+
+  --accent:     #00AEEF;
+  --accent-600: #0086B8;
+  --accent-700: #006F99;
+  --accent-050: #E5F8FF;
+  --amber:      #e9962f;
+
+  --paper:      #ffffff;
+  --surface:    #EAF6FC;
+  --surface-2:  #DCF0FA;
+  --line:       rgba(10, 26, 42, 0.10);
+  --line-2:     rgba(10, 26, 42, 0.16);
+
+  --shadow-sm:  0 1px 2px rgba(10,26,42,.06), 0 2px 8px rgba(10,26,42,.05);
+  --shadow-md:  0 2px 6px rgba(10,26,42,.06), 0 12px 28px rgba(10,26,42,.09);
+  --shadow-lg:  0 4px 12px rgba(10,26,42,.08), 0 28px 60px rgba(10,26,42,.14);
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+
+  --f-display: "Sora", "Poppins", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Open Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --container: 1340px;
+  --gutter: 24px;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+.tv {
+  font-family: var(--f-body);
+  color: var(--ink-2);
+  background: var(--paper);
+  font-size: 16px;
+  line-height: 1.65;
+  letter-spacing: normal;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.tv h1, .tv h2, .tv h3, .tv h4, .tv h5 {
+  font-family: var(--f-display);
+  color: var(--ink);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.011em;
+  margin: 0 0 .6em;
+}
+
+.tv p { margin: 0 0 1.1em; color: var(--slate); }
+.tv a { color: var(--accent-700); text-decoration: none; transition: color .2s var(--ease); }
+.tv a:hover { color: var(--accent); text-decoration: none; }
+/* Phone numbers are tappable but never highlighted — they read as text, not links.
+   Buttons are excluded; there the tel: link IS the call-to-action. */
+.tv a[href^="tel:"]:not(.tv-btn),
+.tv a[href^="tel:"]:not(.tv-btn):hover { color: inherit; }
+.tv img { max-width: 100%; height: auto; }
+.tv ul { margin: 0; padding: 0; }
+
+.tv-wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.tv-wrap--wide { max-width: 1340px; }
+
+.tv-section { padding: clamp(54px, 6.4vw, 88px) 0; position: relative; }
+.tv-section--tight { padding: clamp(40px, 5vw, 68px) 0; }
+.tv-section--surface { background: var(--surface); }
+.tv-section--tint { background: var(--surface-2); }
+/* brand-blue band — the deep end of the #00AEEF family. White text is 5.4:1
+   at the light end of the gradient; the cyan glow sits away from the copy. */
+.tv-section--blue {
+  background:
+    radial-gradient(900px 420px at 92% -12%, rgba(0,174,239,.35), transparent 62%),
+    linear-gradient(158deg, #006FAE 0%, #005B94 55%, #004E80 100%);
+}
+.tv .tv-section--blue h2 { color: #fff; }
+.tv .tv-section--blue .tv-head p { color: #E0F4FF; }
+.tv-section--blue .tv-eyebrow { color: #fff; }
+.tv-section--blue .tv-eyebrow::before { background: linear-gradient(90deg, #4DCEFF, rgba(77,206,255,0)); }
+.tv-section--blue .tv-card { border-color: transparent; box-shadow: 0 10px 30px rgba(0,30,60,.18); }
+.tv-section--ink {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(900px 420px at 92% -12%, rgba(0,174,239,.26), transparent 62%),
+    radial-gradient(700px 460px at 4% 106%, rgba(0,174,239,.13), transparent 60%),
+    linear-gradient(158deg, #081727 0%, #12304a 52%, #081727 100%);
+  color: #cfe0ec;
+}
+/* the process train the section is describing, laid across the band as ground.
+   Light strokes, since this one sits on dark rather than on the paper. */
+.tv-section--ink::before {
+  content: ""; position: absolute; inset: 0;
+  background: url("../img/bg/pid-plant-train.svg") center 62% / 1500px auto no-repeat;
+  opacity: .5; pointer-events: none;
+}
+.tv-section--ink > * { position: relative; }
+/* --------------------------------------------------------------------------
+   Turnkey band — pale blue, the same family as the product page ground.
+   It was dark and sat directly above the near-black stats band, so two dark
+   sections ran together. Light here also puts the plant render on a ground
+   close to its own backdrop, so the shadow carries the edge.
+   -------------------------------------------------------------------------- */
+.tv-section--turnkey {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(900px 460px at 92% -14%, rgba(0,174,239,.16), transparent 62%),
+    linear-gradient(168deg, #D6EEF9 0%, #C9E8F6 54%, #D3EEFA 100%);
+}
+/* the process train the section describes, as ground */
+.tv-section--turnkey::before {
+  content: ""; position: absolute; inset: 0;
+  background: url("../img/bg/pid-plant-train.svg") center 62% / 1500px auto no-repeat;
+  opacity: .5; pointer-events: none;
+}
+.tv-section--turnkey > * { position: relative; }
+.tv-section--turnkey h2 { color: var(--ink); }
+.tv .tv-section--turnkey .tv-lead { color: var(--ink-3); }
+.tv .tv-section--turnkey .tv-lines { color: var(--slate); }
+/* accent-700 is only 4.3 on this ground, less where the train crosses it.
+   #005270 is the same deep cyan the product page uses for its labels. */
+.tv-section--turnkey .tv-eyebrow { color: #005270; }
+.tv-section--turnkey .tv-eyebrow::before {
+  background: linear-gradient(90deg, #005270, rgba(0,82,112,0));
+}
+/* the ghost pill's default border is rgba(10,26,42,.16), which nearly vanishes
+   on this ground — give it a white fill and a firmer edge so the capsule reads */
+.tv .tv-section--turnkey .tv-btn--ghost,
+.tv .tv-hero .tv-btn--ghost {
+  background: rgba(255,255,255,.72); border-color: rgba(0,82,112,.28); color: #00384C;
+}
+.tv .tv-section--turnkey .tv-btn--ghost:hover,
+.tv .tv-hero .tv-btn--ghost:hover {
+  background: #fff; border-color: var(--accent); color: #005270;
+}
+
+.tv-section--ink h2, .tv-section--ink h3, .tv-section--ink h4 { color: #fff; }
+.tv-section--ink p { color: rgba(214,230,241,.82); }
+
+/* --------------------------------------------------------------------------
+   3. Type helpers
+   -------------------------------------------------------------------------- */
+.tv-eyebrow {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--f-body);
+  font-size: 11.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-700);
+  margin-bottom: 16px;
+}
+.tv-eyebrow::before {
+  content: ""; width: 26px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), rgba(0,174,239,0));
+}
+.tv-section--ink .tv-eyebrow, .tv-cta .tv-eyebrow { color: #4DCEFF; }
+.tv-section--ink .tv-eyebrow::before, .tv-cta .tv-eyebrow::before { background: linear-gradient(90deg, #4DCEFF, rgba(77,206,255,0)); }
+
+.tv-h1 { font-size: clamp(2.15rem, 4.2vw, 2.95rem); }
+.tv-h2 { font-size: clamp(1.6rem, 2.8vw, 2.25rem); }
+.tv-h3 { font-size: clamp(1.15rem, 1.6vw, 1.4rem); }
+.tv-lead { font-size: clamp(1.03rem, 1.2vw, 1.13rem); line-height: 1.6; }
+
+.tv-head { max-width: 760px; margin-bottom: clamp(32px, 4vw, 54px); }
+.tv-head--center { margin-inline: auto; text-align: center; }
+.tv-head p:last-child { margin-bottom: 0; }
+
+/* --------------------------------------------------------------------------
+   4. Buttons
+   -------------------------------------------------------------------------- */
+.tv .tv-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 26px;
+  font-family: var(--f-body);
+  font-size: 14.5px; font-weight: 650; letter-spacing: .01em;
+  border-radius: var(--r-pill);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease),
+              background-color .22s var(--ease), color .22s var(--ease), border-color .22s var(--ease);
+  white-space: nowrap;
+}
+.tv .tv-btn i { font-size: 1.05em; line-height: 1; }
+.tv .tv-btn:hover { transform: translateY(-2px); text-decoration: none; }
+
+.tv .tv-btn--primary {
+  /* white on #00AEEF is 2.5:1; navy ink on it is 7:1, so the brand fill keeps dark text */
+  background: var(--accent);
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(0,174,239,.34);
+}
+.tv .tv-btn--primary:hover { color: var(--ink); background: #1CBBF7; box-shadow: 0 12px 28px rgba(0,174,239,.42); }
+
+.tv .tv-btn--ghost {
+  background: transparent; color: var(--ink); border-color: var(--line-2);
+}
+.tv .tv-btn--ghost:hover { color: var(--accent-700); border-color: var(--accent); background: var(--accent-050); }
+
+.tv .tv-btn--on-dark {
+  background: rgba(255,255,255,.07); color: #fff;
+  border-color: rgba(255,255,255,.28);
+  backdrop-filter: blur(6px);
+}
+.tv .tv-btn--on-dark:hover { background: rgba(255,255,255,.15); color: #fff; border-color: rgba(255,255,255,.5); }
+
+.tv .tv-btn--sm { padding: 10px 18px; font-size: 13.5px; }
+
+.tv .tv-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 650; font-size: 14.5px; color: var(--accent-700);
+}
+.tv .tv-link i { transition: transform .22s var(--ease); }
+.tv .tv-link:hover i { transform: translateX(4px); }
+
+/* --------------------------------------------------------------------------
+   5. Header (scoped override of the shared template)
+   -------------------------------------------------------------------------- */
+.tv #header {
+  background: transparent;
+  box-shadow: none;
+  padding: 16px 0;
+  transition: background-color .35s var(--ease), padding .35s var(--ease), box-shadow .35s var(--ease);
+}
+.tv #header .container-xl { max-width: 1340px; }
+/* The shared logo.png has a white background, so instead of filtering it we
+   paint a pre-made white version behind the (hidden) img and keep its box.
+   No plate behind it: the source art is only 116x65, and its soft edges are
+   invisible white-on-white but obvious on any coloured field. */
+.tv #header .logo {
+  background: url("../img/logo-white.png") left center / contain no-repeat;
+  transition: background-image .35s var(--ease);
+}
+.tv #header .logo img { max-height: 52px; opacity: 0; }
+.tv #header.tv-header--solid .logo { background-image: url("../img/logo.png"); }
+.tv .nav-menu > ul > li { padding: 10px 0 10px 26px; }
+.tv .nav-menu a {
+  font-family: var(--f-body);
+  font-size: 12.5px; font-weight: 650; letter-spacing: .045em;
+  color: rgba(255,255,255,.9);
+}
+.tv .nav-menu a:hover,
+.tv .nav-menu .active > a,
+.tv .nav-menu li:hover > a { color: #4DCEFF; }
+
+/* underline indicator on top-level items — on the <li>, so the template's
+   icofont dropdown caret (an ::after on the <a>) is left intact */
+.tv .nav-menu > ul > li::after {
+  content: ""; position: absolute; left: 26px; right: 0; bottom: 4px;
+  height: 2px; border-radius: 2px; background: #4DCEFF;
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform .25s var(--ease);
+}
+.tv .nav-menu > ul > li:hover::after,
+.tv .nav-menu > ul > li.active::after { transform: scaleX(1); }
+.tv .nav-menu .drop-down > a::after { padding-left: 6px; opacity: .6; font-size: .9em; }
+
+.tv .header-social-links a { color: rgba(255,255,255,.7); }
+.tv .header-social-links a:hover { color: #4DCEFF; }
+
+/* dropdowns stay light for readability */
+.tv .nav-menu .drop-down ul {
+  background: #fff;
+  border-top: 2px solid var(--accent);
+  border-radius: 0 0 var(--r-sm) var(--r-sm);
+  box-shadow: var(--shadow-lg);
+  padding: 8px 0;
+}
+.tv .nav-menu .drop-down li a { color: var(--ink-2); font-size: 12.5px; padding: 9px 20px; }
+.tv .nav-menu .drop-down li a:hover { color: var(--accent-700); background: var(--accent-050); }
+/* nested flyouts keep the template's side arrow so they read as openable */
+.tv .nav-menu .drop-down .drop-down > a { padding-right: 38px; }
+
+/* scrolled / solid state */
+.tv #header.tv-header--solid {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  box-shadow: 0 1px 0 var(--line), 0 8px 30px rgba(10,26,42,.07);
+  padding: 8px 0;
+}
+.tv #header.tv-header--solid .nav-menu a { color: var(--ink-2); }
+.tv #header.tv-header--solid .nav-menu a:hover,
+.tv #header.tv-header--solid .nav-menu .active > a,
+.tv #header.tv-header--solid .nav-menu li:hover > a { color: var(--accent-700); }
+.tv #header.tv-header--solid .nav-menu > ul > li::after { background: var(--accent); }
+.tv #header.tv-header--solid .header-social-links a { color: var(--muted); }
+.tv #header.tv-header--solid .header-social-links a:hover { color: var(--accent-700); }
+
+/* pages that don't start with a dark hero, or where a solid header is wanted throughout */
+.tv--light-top #header { background: #fff; box-shadow: 0 1px 0 var(--line), 0 8px 30px rgba(10,26,42,.06); padding: 8px 0; }
+.tv--light-top #header .logo { background-image: url("../img/logo.png"); }
+.tv--light-top .nav-menu a { color: var(--ink-2); }
+.tv--light-top .nav-menu a:hover,
+.tv--light-top .nav-menu .active > a,
+.tv--light-top .nav-menu li:hover > a { color: var(--accent-700); }
+.tv--light-top .nav-menu > ul > li::after { background: var(--accent); }
+.tv--light-top .header-social-links a { color: var(--muted); }
+.tv--light-top .header-social-links a:hover { color: var(--accent-700); }
+
+/* mobile toggle — the template paints it brand-green; recolour it */
+.tv .mobile-nav-toggle i { color: #fff; }
+.tv--light-top .mobile-nav-toggle i { color: var(--ink-2); }
+.tv.mobile-nav-active .mobile-nav-toggle i { color: #fff; }
+.tv .mobile-nav { background: rgba(7,21,35,.98); }
+.tv .mobile-nav a { color: rgba(233,243,249,.9); font-family: var(--f-body); }
+.tv .mobile-nav a:hover, .tv .mobile-nav .active > a, .tv .mobile-nav li:hover > a { color: #66D5FF; }
+.tv .mobile-nav-overly { background: rgba(6,16,26,.7); }
+
+/* --------------------------------------------------------------------------
+   6. Hero
+   -------------------------------------------------------------------------- */
+.tv-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex; align-items: center;
+  padding: 128px 0 78px;
+  overflow: hidden;
+  background: #fff;
+  isolation: isolate;
+}
+/* copy on white on the left, the photo uncovered on the right half */
+.tv-hero__media { position: absolute; inset: 0 0 0 50%; z-index: -2; }
+.tv-hero__slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 1.5s ease, transform 9s linear;
+}
+.tv-hero__slide.is-active { opacity: 1; transform: scale(1); }
+.tv-hero__grid {
+  position: absolute; inset: 0; z-index: -1; opacity: .16;
+  background-image:
+    linear-gradient(rgba(10,26,42,.30) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,26,42,.30) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(1000px 600px at 20% 40%, #000 10%, transparent 78%);
+  -webkit-mask-image: radial-gradient(1000px 600px at 20% 40%, #000 10%, transparent 78%);
+}
+.tv-hero__inner { position: relative; max-width: 600px; }
+.tv-hero .tv-eyebrow { color: #005270; }
+.tv-hero .tv-eyebrow::before { background: linear-gradient(90deg, #005270, rgba(0,82,112,0)); }
+.tv-hero h1 { color: var(--ink); margin-bottom: 20px; }
+.tv-hero h1 em {
+  font-style: normal;
+  background: linear-gradient(100deg, #0086B8 0%, #006F99 50%, #005270 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.tv .tv-hero__sub {
+  font-size: clamp(1rem, 1.45vw, 1.19rem);
+  color: var(--ink-3);
+  max-width: 620px; margin-bottom: 26px;
+}
+.tv-hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 34px; }
+
+.tv-hero__badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.tv-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 15px;
+  border-radius: var(--r-pill);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.18);
+  color: rgba(232,243,250,.95);
+  font-size: 12.5px; font-weight: 600; letter-spacing: .01em;
+  backdrop-filter: blur(8px);
+}
+.tv-chip i { color: #66D5FF; font-size: 1.05em; }
+.tv-chip--light {
+  background: var(--accent-050); border-color: rgba(0,174,239,.22); color: var(--accent-700);
+}
+.tv-chip--light i { color: var(--accent-600); }
+
+/* stat rail floating at the bottom of the hero */
+.tv-hero__rail {
+  position: relative;
+  margin-top: 8px;
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
+}
+.tv-hero__rail div { background: rgba(255,255,255,.78); padding: 18px 20px; }
+.tv-hero__rail strong {
+  display: block;
+  font-family: var(--f-display); font-size: clamp(1.35rem, 2.3vw, 1.85rem);
+  font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -.015em;
+  font-variant-numeric: tabular-nums;
+}
+.tv-hero__rail span {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted);
+}
+.tv-hero__scrollcue {
+  position: absolute; left: 25%; bottom: 26px; transform: translateX(-50%);
+  color: rgba(10,26,42,.4); font-size: 22px;
+  animation: tv-bob 2.2s ease-in-out infinite;
+}
+@keyframes tv-bob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 8px); } }
+
+/* --------------------------------------------------------------------------
+   7. Logo marquee
+   -------------------------------------------------------------------------- */
+.tv-marquee { padding: 34px 0; background: var(--paper); border-bottom: 1px solid var(--line); overflow: hidden; }
+.tv-marquee__label {
+  text-align: center; font-size: 11.5px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 24px;
+  padding-inline: var(--gutter);
+}
+.tv-marquee__track {
+  display: flex; width: max-content; gap: 56px; align-items: center;
+  animation: tv-scroll 46s linear infinite;
+}
+.tv-marquee:hover .tv-marquee__track { animation-play-state: paused; }
+.tv-marquee img {
+  height: 46px; width: auto; object-fit: contain;
+  filter: grayscale(1); opacity: .72;
+  transition: filter .3s var(--ease), opacity .3s var(--ease);
+}
+.tv-marquee img:hover { filter: grayscale(0); opacity: 1; }
+@keyframes tv-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .tv-marquee__track { animation: none; flex-wrap: wrap; justify-content: center; width: 100%; }
+}
+
+/* --------------------------------------------------------------------------
+   8. Split (image + copy)
+   -------------------------------------------------------------------------- */
+.tv-split {
+  display: grid; grid-template-columns: 1.05fr 1fr;
+  gap: clamp(32px, 5vw, 72px); align-items: center;
+}
+.tv-split--flip > *:first-child { order: 2; }
+.tv-split__figure { position: relative; }
+.tv-split__figure img {
+  width: 100%; border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+/* the plant render is 2.16:1 with the subject in the middle third; crop the
+   empty background off the sides rather than showing it at full width */
+.tv-section--turnkey .tv-split__figure img { aspect-ratio: 3 / 2; object-fit: cover; }
+.tv-split__figure::before {
+  content: ""; position: absolute; inset: auto -18px -18px auto;
+  width: 62%; height: 62%; border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(0,174,239,.16), rgba(233,150,47,.12));
+  z-index: -1;
+}
+
+/* checklist */
+.tv-check { list-style: none; display: grid; gap: 13px; margin: 4px 0 28px; }
+.tv-check li { display: flex; gap: 12px; align-items: flex-start; color: var(--slate); line-height: 1.6; }
+.tv-check i {
+  flex: 0 0 auto; margin-top: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent-050); color: var(--accent-600); font-size: 12px;
+}
+.tv-section--ink .tv-check li { color: rgba(214,230,241,.85); }
+.tv-section--ink .tv-check i { background: rgba(77,206,255,.14); color: #66D5FF; }
+
+/* --------------------------------------------------------------------------
+   9. Cards
+   -------------------------------------------------------------------------- */
+.tv-grid { display: grid; gap: 22px; }
+.tv-grid--2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.tv-grid--3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.tv-grid--4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.tv-grid--5 { grid-template-columns: repeat(5, minmax(0,1fr)); gap: 18px; }
+
+.tv-card {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: 28px;
+  box-shadow: var(--shadow-sm);
+  transition: transform .28s var(--ease), box-shadow .28s var(--ease), border-color .28s var(--ease);
+  height: 100%;
+}
+.tv-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(0,174,239,.28); }
+.tv-card h3 { font-size: 1.12rem; margin-bottom: 10px; }
+
+/* five-up stage cards: narrower than the kit's default, so pull the padding
+   and type in and let the numeral carry the sequence */
+.tv-stages .tv-card { padding: 24px 22px 26px; }
+.tv-stages .tv-card h3 { font-size: .99rem; line-height: 1.32; margin-bottom: 9px; letter-spacing: -.006em; }
+.tv-stages .tv-card p { font-size: .875rem; line-height: 1.58; }
+.tv-stages .tv-card__icon { width: 42px; height: 42px; border-radius: 11px; font-size: 20px; margin-bottom: 15px; }
+.tv-stages .tv-card__num { font-size: 11px; letter-spacing: .16em; margin-bottom: 12px; }
+.tv-card p { font-size: .95rem; margin-bottom: 0; }
+/* accent-600 on white is 4.12:1 — under AA at this size. accent-700 is 5.62. */
+.tv-card__num {
+  font-family: var(--f-display); font-size: 12px; font-weight: 700;
+  letter-spacing: .14em; color: var(--accent-700); display: block; margin-bottom: 14px;
+}
+.tv-section--ink .tv-card__num { color: #66D5FF; }
+.tv-card__icon {
+  width: 50px; height: 50px; border-radius: 13px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent-050), #fff);
+  border: 1px solid rgba(0,174,239,.2);
+  color: var(--accent-600); font-size: 24px;
+  margin-bottom: 18px;
+}
+.tv-section--ink .tv-card {
+  background: rgba(255,255,255,.045); border-color: rgba(255,255,255,.12); box-shadow: none;
+}
+.tv-section--ink .tv-card:hover { background: rgba(255,255,255,.075); border-color: rgba(77,206,255,.35); }
+.tv-section--ink .tv-card__icon {
+  background: rgba(77,206,255,.1); border-color: rgba(77,206,255,.24); color: #66D5FF;
+}
+
+/* product card */
+.tv-prod {
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r-md); overflow: hidden; height: 100%;
+  box-shadow: var(--shadow-sm);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.tv-prod:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: rgba(0,174,239,.3); }
+.tv-prod__media {
+  position: relative; aspect-ratio: 16/10; overflow: hidden;
+  background: linear-gradient(150deg, var(--surface-2), var(--surface));
+}
+.tv-prod__media img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+  transition: transform .5s var(--ease);
+}
+.tv-prod:hover .tv-prod__media img { transform: scale(1.06); }
+.tv-prod__tag {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(255,255,255,.94); backdrop-filter: blur(6px);
+  color: var(--accent-700); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 5px 11px; border-radius: var(--r-pill);
+  border: 1px solid rgba(0,174,239,.2);
+}
+.tv-prod__body { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+.tv-prod__body h3 { font-size: 1.05rem; margin-bottom: 9px; letter-spacing: -.011em; }
+.tv-prod__body p { font-size: .92rem; color: var(--muted); margin-bottom: 18px; flex: 1; }
+.tv-prod__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tv-prod__spec { font-size: 11.5px; font-weight: 650; color: var(--slate); letter-spacing: .04em;
+  font-variant-numeric: tabular-nums; }
+.tv-prod a.tv-prod__stretch::after { content: ""; position: absolute; inset: 0; }
+.tv-prod { position: relative; }
+/* home cards list the Products menu's items; a cyan dot means it has a page */
+.tv .tv-prod__list { list-style: none; display: grid; align-content: start; gap: 7px; margin: 2px 0 20px; flex: 1; }
+.tv-prod__list li { position: relative; padding-left: 15px; font-size: .88rem; line-height: 1.4; color: var(--muted); }
+.tv-prod__list li::before {
+  content: ""; position: absolute; left: 0; top: .5em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--line-2);
+}
+.tv-prod__list li:has(a)::before { background: var(--accent); }
+.tv .tv-prod__list a { color: var(--ink-2); font-weight: 600; }
+.tv .tv-prod__list a:hover { color: var(--accent-700); }
+
+/* industry tiles — photo with the name on a bottom scrim. Not links yet:
+   the industry pages don't exist. Photos are Unsplash License (free use). */
+.tv-ind {
+  position: relative; margin: 0; aspect-ratio: 4/3; overflow: hidden;
+  border-radius: var(--r-md); box-shadow: var(--shadow-sm);
+}
+.tv-ind img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-ind figcaption {
+  position: absolute; inset: auto 0 0; padding: 48px 22px 18px;
+  background: linear-gradient(180deg, rgba(10,26,42,0), rgba(10,26,42,.78));
+  color: #fff; font-family: var(--f-display); font-weight: 650; font-size: 1.12rem;
+}
+@media (max-width: 700px) {
+  .tv-grid--3.tv-inds { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  .tv-ind figcaption { padding: 32px 14px 12px; font-size: .95rem; }
+}
+
+/* --------------------------------------------------------------------------
+   Turnkey section support
+   -------------------------------------------------------------------------- */
+/* product lines: a caption on the figure, well below the lead in weight */
+.tv .tv-lines {
+  font-size: .82rem; line-height: 1.6; color: rgba(196,219,234,.72);
+  margin: 16px 0 0; max-width: 52ch;
+}
+
+.tv-turnkey__cta {
+  display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+  margin-top: clamp(28px, 3.4vw, 38px);
+}
+.tv .tv-link--on-dark { color: #66D5FF; }
+.tv .tv-link--on-dark:hover { color: #A6E8FF; }
+
+/* --------------------------------------------------------------------------
+   11. CTA band
+   -------------------------------------------------------------------------- */
+.tv-cta {
+  position: relative; overflow: hidden;
+  border-radius: var(--r-lg);
+  padding: clamp(38px, 5.5vw, 66px) clamp(26px, 5vw, 62px);
+  background:
+    radial-gradient(700px 340px at 85% 10%, rgba(0,174,239,.35), transparent 62%),
+    linear-gradient(140deg, #0a1a2a, #16374f);
+  color: #fff;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px;
+}
+.tv-cta::after {
+  content: ""; position: absolute; right: -60px; bottom: -80px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(233,150,47,.22), transparent 70%);
+}
+.tv-cta__text { position: relative; max-width: 540px; }  /* keeps the CTA copy off the actions block; 620 wrapped at the old 1180 container */
+.tv-cta h2 { color: #fff; margin-bottom: 12px; }
+.tv-cta p { color: rgba(214,230,241,.82); margin-bottom: 0; }
+.tv-cta__actions { position: relative; display: flex; flex-wrap: wrap; gap: 13px; }
+
+/* gallery viewer */
+.tv-viewer { position: relative; }
+.tv-viewer__stage {
+  position: relative;
+  background: linear-gradient(160deg, #ffffff, #e9f0f5);
+  border-radius: var(--r-lg);
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 30px 70px rgba(0,0,0,.4);
+  aspect-ratio: 4/3;
+  display: grid; place-items: center;
+  overflow: hidden;
+  padding: 18px;
+}
+.tv-viewer__stage img {
+  max-width: 100%; max-height: 100%; width: auto; object-fit: contain;
+  transition: opacity .35s var(--ease);
+}
+.tv-viewer__thumbs { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.tv-viewer__thumbs button {
+  width: 74px; height: 58px; padding: 5px;
+  border-radius: 10px; cursor: pointer;
+  background: rgba(255,255,255,.9);
+  border: 2px solid transparent;
+  transition: border-color .2s var(--ease), transform .2s var(--ease), opacity .2s var(--ease);
+  opacity: .65;
+}
+.tv-viewer__thumbs button img { width: 100%; height: 100%; object-fit: contain; }
+.tv-viewer__thumbs button:hover { opacity: 1; transform: translateY(-2px); }
+.tv-viewer__thumbs button[aria-selected="true"] { border-color: #66D5FF; opacity: 1; }
+
+/* spec strip below hero */
+.tv-specstrip {
+  display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 1px; background: var(--line);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  overflow: hidden; background-color: var(--line);
+  margin-top: -34px; position: relative; z-index: 3;
+  box-shadow: var(--shadow-md);
+}
+.tv-specstrip > div { background: #fff; padding: 22px 24px; }
+.tv-specstrip i { font-size: 22px; color: var(--accent-600); display: block; margin-bottom: 10px; }
+.tv-specstrip strong { display: block; font-family: var(--f-display); font-size: 1.06rem; color: var(--ink); line-height: 1.25; }
+.tv-specstrip span { font-size: 11.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* spec table */
+.tv-table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+.tv-table caption {
+  caption-side: top; text-align: left; padding-bottom: 12px;
+  font-family: var(--f-display); font-weight: 650; color: var(--ink); font-size: 1rem;
+}
+/* header is a micro-label on a tinted band — the band edge is the only separator */
+.tv-table thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11.5px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink);
+  background: var(--accent-050);
+}
+.tv-table tbody th, .tv-table tbody td { padding: 14px 16px; text-align: left; }
+/* the row header is the key you scan by — display face, largest thing in the row */
+.tv-table tbody th {
+  font-family: var(--f-display); font-size: 1rem; font-weight: 650;
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.tv-table tbody td { color: var(--ink-2); }
+.tv-table tbody tr + tr th, .tv-table tbody tr + tr td { border-top: 1px solid var(--line); }
+.tv-table tbody tr:hover th, .tv-table tbody tr:hover td { background: rgba(0,174,239,.07); }
+/* numeric tables: figures right-aligned on shared-width digits so the columns lock up */
+.tv-table--num tbody td,
+.tv-table--num thead th:not(:first-child) { text-align: right; }
+.tv-table--num tbody td { font-variant-numeric: tabular-nums; }
+.tv-tablewrap {
+  overflow-x: auto; border: 1px solid var(--line);
+  border-radius: var(--r-md); background: #fff; box-shadow: var(--shadow-sm);
+}
+
+/* variant card */
+.tv-variant {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+  overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; height: 100%;
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.tv-variant:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.tv-variant__media {
+  aspect-ratio: 16/10; background: linear-gradient(160deg, #fff, var(--surface-2));
+  display: grid; place-items: center; padding: 22px; border-bottom: 1px solid var(--line);
+}
+.tv-variant__media img { max-height: 100%; width: auto; object-fit: contain; }
+.tv-variant__body { padding: 26px 28px 30px; flex: 1; display: flex; flex-direction: column; }
+.tv-variant__body h3 { font-size: 1.28rem; margin-bottom: 6px; }
+.tv-variant__cap {
+  display: inline-flex; align-self: flex-start; margin-bottom: 16px;
+  font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent-700); background: var(--accent-050);
+  border: 1px solid rgba(0,174,239,.2); border-radius: var(--r-pill); padding: 5px 13px;
+}
+
+/* figure with caption (dimension drawings) */
+.tv-figure {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-md);
+  overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.tv-figure img { max-width: 100%; margin-inline: auto; display: block; background: #fff; }
+.tv-figure figcaption {
+  padding: 14px 18px; font-size: 12.5px; font-weight: 650; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.tv-figure figcaption i { color: var(--accent-600); font-size: 15px; }
+
+/* lightbox */
+.tv-lightbox {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(6,14,22,.92);
+  display: none; align-items: center; justify-content: center;
+  padding: 34px;
+  backdrop-filter: blur(4px);
+}
+.tv-lightbox.is-open { display: flex; }
+.tv-lightbox img { max-width: 94vw; max-height: 88vh; border-radius: var(--r-sm); background: #fff; }
+.tv-lightbox__close {
+  position: absolute; top: 20px; right: 24px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+  color: #fff; font-size: 20px; cursor: pointer; display: grid; place-items: center;
+}
+.tv-lightbox__close:hover { background: rgba(255,255,255,.22); }
+
+/* --------------------------------------------------------------------------
+   Floating action, bottom right. WhatsApp only — these two pages drop the
+   template's back-to-top arrow.
+   Inline SVG glyph rather than an icon font, so this does not depend on
+   which icon sets a page happens to link.
+   -------------------------------------------------------------------------- */
+.tv .tv-wa {
+  position: fixed; right: 15px; bottom: 15px; z-index: 995;
+  width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: #25d366; color: #fff;
+  box-shadow: 0 4px 14px rgba(10,26,42,.22), 0 2px 4px rgba(10,26,42,.12);
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease);
+}
+.tv .tv-wa svg { width: 30px; height: 30px; display: block; }
+.tv .tv-wa:hover {
+  color: #fff; transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(10,26,42,.28), 0 3px 6px rgba(10,26,42,.14);
+}
+.tv .tv-wa:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tv .tv-wa { transition: none; }
+  .tv .tv-wa:hover { transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   13. Footer polish (scoped)
+   -------------------------------------------------------------------------- */
+.tv #footer { background: #071523; color: rgba(200,220,234,.72); font-family: var(--f-body); }
+/* style.css pins the footer contact block to Roboto at (1,2,1); match and win on source order. */
+.tv #footer .footer-top .footer-contact p,
+.tv #footer .footer-top .footer-links p { font-family: var(--f-body); }
+.tv #footer .footer-top { background: #071523; padding: 56px 0 30px; }
+/* style.css pins these at (1,2,1) with 22px uppercase; match it and win on source order. */
+.tv #footer .footer-top .footer-contact h3 {
+  font-family: var(--f-display); color: #fff;
+  font-size: 1.05rem; font-weight: 650; line-height: 1.3;
+  text-transform: none; letter-spacing: -.01em;
+  padding: 0; margin-bottom: 14px; position: relative;
+}
+.tv #footer h3::after {
+  content: ""; display: block; width: 34px; height: 2px; border-radius: 2px;
+  background: var(--accent); margin-top: 10px;
+}
+.tv #footer p { color: rgba(200,220,234,.7); font-size: .94rem; line-height: 1.8; }
+.tv #footer a { color: #66D5FF; }
+.tv #footer a[href^="tel:"], .tv #footer a[href^="tel:"]:hover { color: inherit; }
+.tv #footer .copyright, .tv #footer .credits { color: rgba(200,220,234,.55); font-size: .86rem; }
+/* footer tracks the widest page container so it does not sit narrower than the content above */
+.tv #footer .container { max-width: 1340px; }
+.tv #footer .footer-top .row { row-gap: 36px; }
+.tv #footer .footer-about p { max-width: 42ch; }
+/* The three columns were equal 447px, so the short brand paragraph left a void
+   while the two address blocks ran dense. Weight them to their content. */
+.tv #footer .footer-top .row {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 30px 56px; margin: 0;
+}
+.tv #footer .footer-top .row > [class*="col-"] {
+  flex: none; width: auto; max-width: none; padding: 0;
+}
+
+/* Phone and Email were label-over-value at 50px each. Label beside value puts
+   them on one line and lines the labels up in a column across both blocks. */
+/* NOT grid: the three phone numbers are direct children, so a grid made each
+   one its own cell and forced it onto its own line. Hanging indent keeps them
+   as inline text while still lining the label and the values up in columns. */
+.tv #footer .footer-line {
+  margin-top: 9px;
+  padding-left: 74px; text-indent: -74px;
+}
+.tv #footer .footer-line span {
+  display: inline-block; width: 58px; margin: 0 16px 0 0; text-indent: 0;
+  vertical-align: top;
+  font-size: 11px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(200,220,234,.45);
+}
+/* keep a number intact: "+91" was ending one line and the rest starting the next */
+.tv #footer .footer-line a { white-space: nowrap; }
+
+@media (max-width: 991px) {
+  .tv #footer .footer-top .row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  .tv #footer .footer-top .row { grid-template-columns: 1fr; }
+}
+.tv #footer > .container { border-top: 1px solid rgba(255,255,255,.08); }
+.tv #footer .social-links a { color: rgba(200,220,234,.6); }
+.tv #footer .social-links a:hover { color: #66D5FF; }
+
+/* --------------------------------------------------------------------------
+   14. Scroll reveal
+   -------------------------------------------------------------------------- */
+.tv-reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.tv-reveal.is-in { opacity: 1; transform: none; }
+.tv-reveal[data-d="1"] { transition-delay: .08s; }
+.tv-reveal[data-d="2"] { transition-delay: .16s; }
+.tv-reveal[data-d="3"] { transition-delay: .24s; }
+.tv-reveal[data-d="4"] { transition-delay: .32s; }
+@media (prefers-reduced-motion: reduce) {
+  .tv-reveal { opacity: 1; transform: none; transition: none; }
+  .tv-hero__slide { transition: opacity .4s ease; transform: none; }
+}
+
+/* --------------------------------------------------------------------------
+   15. Contact page — one enquiry form, nothing else
+   Address, phone and email are in the footer on every page, so they are not
+   restated here. Fields are numbered and underlined: structure without chrome.
+   -------------------------------------------------------------------------- */
+.tv-enquiry { max-width: 620px; margin-inline: auto; padding-bottom: clamp(64px, 8vw, 112px); }
+.tv-enquiry .tv-doc__title { margin-bottom: 14px; }
+.tv .tv-enquiry .tv-doc__intro { margin-bottom: 46px; max-width: none; }
+
+/* Prefixed with .php-email-form so these beat the shared form rules below, which
+   are defined later in the file and would otherwise win on source order. */
+.tv-form { counter-reset: tvfield; }
+.tv .php-email-form.tv-form .form-group {
+  counter-increment: tvfield;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+  margin-bottom: 4px;
+}
+.tv .php-email-form.tv-form label {
+  display: flex; align-items: baseline; gap: 12px;
+  font-size: .95rem; font-weight: 650; letter-spacing: 0;
+  color: var(--ink); margin-bottom: 2px;
+}
+.tv .php-email-form.tv-form label::before {
+  content: "0" counter(tvfield);
+  font-size: 11px; font-weight: 650; letter-spacing: .1em;
+  color: var(--muted); font-variant-numeric: tabular-nums;
+}
+.tv .php-email-form.tv-form input,
+.tv .php-email-form.tv-form textarea {
+  width: 100%; height: auto;
+  border: 0; border-bottom: 1.5px solid var(--line-2); border-radius: 0;
+  background: transparent; box-shadow: none;
+  padding: 8px 0 14px;
+  font-family: var(--f-body); font-size: 1.02rem; color: var(--ink);
+  transition: border-color .2s var(--ease);
+}
+.tv .php-email-form.tv-form textarea { resize: vertical; }
+.tv .php-email-form.tv-form input:focus,
+.tv .php-email-form.tv-form textarea:focus { border-bottom-color: var(--accent); outline: none; }
+.tv .php-email-form.tv-form input::placeholder,
+.tv .php-email-form.tv-form textarea::placeholder { color: rgba(10,26,42,.30); }
+.tv-form__actions { border-top: 1px solid var(--line); padding-top: 26px; margin-top: 26px; }
+
+.tv .php-email-form .form-group { margin-bottom: 18px; }
+.tv .php-email-form label {
+  display: block; font-size: 12.5px; font-weight: 650; letter-spacing: .03em;
+  color: var(--ink-2); margin-bottom: 7px;
+}
+.tv .php-email-form input,
+.tv .php-email-form textarea {
+  width: 100%; border-radius: var(--r-sm); border: 1.5px solid var(--line-2);
+  padding: 12px 15px; font-size: 14.5px; font-family: var(--f-body); color: var(--ink-2);
+  background: #fff; box-shadow: none;
+  transition: border-color .2s var(--ease);
+}
+.tv .php-email-form input { height: 48px; }
+.tv .php-email-form input:focus,
+.tv .php-email-form textarea:focus { border-color: var(--accent); outline: none; }
+.tv .php-email-form .validate { display: none; color: #d9481f; margin: 6px 0 0; font-weight: 600; font-size: 12.5px; }
+.tv .php-email-form .error-message {
+  display: none; color: #fff; background: #d9481f; border-radius: var(--r-sm);
+  text-align: center; padding: 14px; font-weight: 650; margin-bottom: 16px;
+}
+.tv .php-email-form .sent-message {
+  display: none; color: #fff; background: #1e9e5a; border-radius: var(--r-sm);
+  text-align: center; padding: 14px; font-weight: 650; margin-bottom: 16px;
+}
+.tv .php-email-form .loading { display: none; text-align: center; padding: 12px; color: var(--muted); font-size: 13.5px; }
+.tv .php-email-form .loading::before {
+  content: ""; display: inline-block; border-radius: 50%; width: 16px; height: 16px;
+  margin: 0 8px -3px 0; border: 2.5px solid var(--accent); border-top-color: transparent;
+  animation: tv-spin .8s linear infinite;
+}
+@keyframes tv-spin { to { transform: rotate(360deg); } }
+
+/* WhatsApp icon-link next to a mobile number */
+.tv-wa {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(37,211,102,.15); color: #25d366; font-size: 13px;
+  transition: background .2s var(--ease), transform .2s var(--ease);
+}
+.tv-wa:hover { background: rgba(37,211,102,.28); color: #1da851; transform: translateY(-1px); }
+
+
+/* --------------------------------------------------------------------------
+   16. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .tv-grid--4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-grid--5 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .tv-specstrip { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 991px) {
+  .tv #header { padding: 12px 0; background: rgba(7,21,35,.94); backdrop-filter: blur(12px); }
+  .tv #header.tv-header--solid { background: rgba(255,255,255,.96); }
+  .tv--light-top #header { background: #fff; }
+  .tv-hero { min-height: auto; padding: 360px 0 76px; }
+  /* the photo moves above the copy */
+  .tv-hero__media { inset: 76px 0 auto 0; height: 260px; }
+  .tv-split { grid-template-columns: 1fr; }
+  .tv-split--flip > *:first-child { order: 0; }
+  .tv-split__figure::before { display: none; }
+  .tv-grid--3 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-grid--5 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 700px) {
+  .tv { font-size: 16px; }
+  .tv-grid--2, .tv-grid--3, .tv-grid--4, .tv-grid--5 { grid-template-columns: 1fr; }
+  .tv-hero__rail { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .tv-specstrip { grid-template-columns: 1fr; margin-top: -20px; }
+  .tv-cta { flex-direction: column; align-items: flex-start; }
+  .tv-hero__cta .tv-btn, .tv-cta__actions .tv-btn { flex: 1 1 auto; }
+  .tv-viewer__thumbs button { width: 62px; height: 50px; }
+}
+
+/* --------------------------------------------------------------------------
+   17. Document layer — .tv-doc
+   Deliberately does NOT reuse the landing-page kit (.tv-specstrip / .tv-variant /
+   .tv-cta / .tv-section--ink). These pages should read as a document, not a
+   second home page: flat, light, hairline rules, no cards, no gradients, no dark
+   bands, no scroll reveals.
+   Used by every page except index.html, which keeps the landing kit.
+   -------------------------------------------------------------------------- */
+/* the page ground is tinted, not white — content blocks stay white so they read
+   as sheets laid on it. That is the only thing carrying depth here; the flat,
+   hairline treatment of the content itself is unchanged. */
+.tv-doc {
+  /* tuned against WCAG, not by eye: every colour that sits directly on
+     --doc-ground clears AA. --doc-label is 6.6:1 on the ground, 8.6:1 on white. */
+  --doc-ground: #d6e4ee;
+  --doc-label:  #005270;
+  /* white sheets on a tinted ground: soft edge, no hairline. A 1px border against
+     this much contrast is what read as sharp, so the shadow does the separating. */
+  --doc-sheet:  0 1px 2px rgba(10,26,42,.05), 0 6px 18px rgba(10,26,42,.07);
+  /* photos and drawings sit on this, not on white. Paired with mix-blend-mode:
+     multiply, a white photo backdrop dissolves into it, so there is no visible box. */
+  --photo-ground: linear-gradient(160deg, var(--surface), var(--surface-2));
+
+  padding: 118px 0 84px;
+  background:
+    linear-gradient(180deg, #CCF0FF 0, rgba(204,240,255,0) 620px),
+    url("../img/bg/pid-dx-loop.svg") right -170px top 96px / 1240px auto no-repeat,
+    var(--doc-ground);
+}
+.tv-doc__wrap { width: 100%; max-width: 1340px; margin-inline: auto; padding-inline: var(--gutter); }
+
+.tv-doc__crumb {
+  display: flex; flex-wrap: wrap; gap: 8px; list-style: none;
+  font-size: 12.5px; color: var(--muted); margin: 0 0 30px; padding: 0;
+}
+.tv-doc__crumb li + li::before { content: "/"; margin-right: 8px; color: var(--line-2); }
+.tv-doc__crumb a { color: var(--slate); }
+.tv-doc__crumb a:hover { color: var(--accent-700); }
+.tv-doc__crumb [aria-current] { color: var(--ink-2); }
+
+.tv-doc__title { font-size: clamp(1.85rem, 3.3vw, 2.5rem); margin: 0 0 16px; }
+/* `.tv p` is (0,1,1) and beats a bare class — prefix anything that sets colour on a <p>. */
+.tv .tv-doc__intro { font-size: 1.15rem; line-height: 1.62; color: var(--ink-3); max-width: 72ch; margin: 0 0 24px; text-wrap: pretty; }
+.tv-doc__cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 44px; }
+.tv .tv-doc__note { font-size: .95rem; line-height: 1.6; color: var(--slate); max-width: 64ch; margin: -4px 0 26px; }
+
+.tv .tv-doc__label {
+  font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--doc-label); margin: 0 0 20px;
+}
+
+/* same split and gap as .tv-doc__pair, so every sheet on the page lands on one
+   of four x positions instead of two near-misses 6px apart */
+.tv-doc__top { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 40px; align-items: start; }
+.tv-doc__pair {
+  display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-rows: auto auto; grid-auto-flow: column;
+  gap: 22px 40px; align-items: start;
+}
+
+/* flatten the image viewer inside the doc layer */
+.tv-doc .tv-viewer__stage {
+  background: var(--photo-ground); border: 0; isolation: isolate;
+  border-radius: var(--r-md); box-shadow: var(--doc-sheet); padding: 0;
+  aspect-ratio: 4/3;
+}
+.tv-doc .tv-viewer__stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.tv-doc .tv-viewer__thumbs button {
+  border-radius: 9px; background: var(--photo-ground); border: 2px solid transparent;
+  box-shadow: var(--doc-sheet); opacity: 1; width: 66px; height: 52px;
+  padding: 0; overflow: hidden; isolation: isolate;
+}
+.tv-doc .tv-viewer__thumbs button img { object-fit: cover; mix-blend-mode: multiply; display: block; }
+.tv-doc .tv-viewer__thumbs button:hover { transform: none; border-color: rgba(0,174,239,.35); }
+.tv-doc .tv-viewer__thumbs button[aria-selected="true"] { border-color: var(--accent-600); }
+
+/* specification pairs — hairline rows, no card */
+.tv-doc__dl {
+  margin: 0; background: var(--paper); padding: 4px 26px;
+  border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-doc__dl > div {
+  display: grid; grid-template-columns: 152px 1fr; gap: 24px;
+  padding: 15px 0; border-bottom: 1px solid var(--line);
+}
+.tv-doc__dl > div:last-child { border-bottom: 0; }
+.tv-doc__dl dt { font-size: .95rem; font-weight: 650; color: var(--ink); }
+.tv-doc__dl dd { margin: 0; font-size: 1.02rem; color: var(--ink-2); line-height: 1.65; }
+
+.tv-doc__sec {
+  border-top: 1px solid var(--line); margin-top: 56px;
+  padding-top: 40px; padding-bottom: 0;   /* style.css sets 60px on all <section> */
+  overflow: visible;                      /* ...and overflow: hidden, which clips the sheet shadows */
+}
+.tv .tv-doc__h2 { font-size: clamp(1.35rem, 2.2vw, 1.7rem); margin: -8px 0 22px; }
+.tv .tv-doc__h3 { font-size: 1.1rem; margin: 0 0 2px; }
+.tv .tv-tablewrap + .tv-doc__note { margin: 12px 0 0; }
+/* Each section carries a drawing detail in the open band beside its label.
+   Put on the section itself, not a full-bleed pseudo-element, so the motif
+   lines up with the content column without any 100vw arithmetic. */
+.tv-doc__sec {
+  background-repeat: no-repeat;
+}
+/* capacity range: three vessels on a common header */
+.tv-doc__sec--range {
+  background-image: url("../img/bg/pid-size-range.svg");
+  background-position: right -60px top 6px;
+  background-size: 720px auto;
+}
+@media (max-width: 900px) {
+  .tv-doc__sec { background-image: none; }
+}
+
+/* flat tables and drawings */
+/* no max-width: the standalone table then shares the wrap's edges with every
+   other sheet on the page. The paired tables are sized by their grid column. */
+.tv-doc .tv-tablewrap {
+  border: 0; border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  background: var(--paper);
+}
+.tv-doc .tv-table { font-size: 1rem; }
+/* A pale band here collided with the page ground — same hue, 20 levels apart,
+   so it read as background showing through the sheet instead of as a header.
+   Inverted: the ground is light, so the header goes dark and anchors the table. */
+.tv-doc .tv-table thead th { background: var(--ink-3); color: #fff; }
+.tv-doc .tv-table caption { padding: 20px 18px 14px; }
+.tv-doc .tv-table tbody th, .tv-doc .tv-table tbody td { padding: 15px 18px; }
+.tv-doc .tv-tablewrap { overflow: hidden; }
+.tv-doc .tv-table thead th { padding: 12px 18px; font-size: 12px; }
+.tv-doc .tv-figure {
+  border: 0; border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  overflow: hidden; margin: 0;
+}
+
+/* first-screen photo, edge to edge */
+.tv-doc__photo { position: relative; }
+.tv-doc__photo img { width: 100%; }
+
+/* capacity band: photo edge to edge on one side, the next step on the other */
+.tv-doc__ask {
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  margin: 56px 0 0; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0,360px) minmax(0,1fr); align-items: stretch;
+}
+.tv-doc__ask-photo { position: relative; margin: 0; }
+.tv-doc .tv-doc__ask img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-doc__ask > div { padding: 30px 32px; align-self: center; }
+.tv-doc__ask h2 { font-size: 1.3rem; margin: 0 0 6px; }
+.tv .tv-doc__ask p { color: var(--slate); margin: 0 0 18px; max-width: 60ch; font-size: .98rem; }
+.tv-doc__ask .tv-doc__cta { margin: 0; }
+
+.tv-flow {
+  margin: 0; background: var(--paper); padding: 22px 26px 16px;
+  border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-flow svg { display: block; width: 100%; height: auto; }
+.tv-flow figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+.tv-flow__line { fill: none; stroke: var(--ink-3); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.tv-flow__thin { stroke-width: 1.6; }
+.tv-flow__solid { fill: var(--surface); }
+.tv-flow__milk { fill: var(--accent-050); stroke: none; }
+.tv-flow__plate { fill: none; stroke: var(--accent); stroke-width: 7; stroke-dasharray: 12 5; }
+.tv-flow__leader { stroke: var(--slate); stroke-width: 1.4; }
+.tv-flow__cold { fill: none; stroke: var(--accent-600); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-flow__warm { fill: none; stroke: var(--amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-flow__label { fill: var(--ink-2); font: 600 17px var(--f-body); text-anchor: middle; }
+
+/* Know more: extra detail on a spec row, opened in place */
+.tv-more { margin-top: 4px; }
+.tv-more summary, .tv-faq summary { cursor: pointer; list-style: none; }
+.tv-more summary::-webkit-details-marker, .tv-faq summary::-webkit-details-marker { display: none; }
+.tv-more summary {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .875rem; font-weight: 650; color: var(--accent-700);
+}
+.tv-more summary:hover { color: var(--accent-600); }
+.tv-more summary:focus-visible, .tv-faq summary:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 2px; border-radius: 4px; }
+.tv-more summary i, .tv-faq summary i { transition: transform .2s var(--ease); line-height: 1; }
+.tv-more[open] summary i, .tv-faq details[open] summary i { transform: rotate(180deg); }
+.tv .tv-more p {
+  margin: 8px 0 4px; padding-left: 12px; border-left: 2px solid var(--accent);
+  font-size: .95rem; line-height: 1.6; color: var(--slate);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-more summary i, .tv-faq summary i { transition: none; }
+}
+
+/* sizes: one photo per tank type, then the whole range in a single table */
+.tv-sizes { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-bottom: 28px; }
+.tv-size__frame, .tv-size .tv-viewer { margin: 0 0 14px; }
+.tv-size__frame {
+  position: relative; aspect-ratio: 4/3; overflow: hidden; isolation: isolate;
+  background: var(--photo-ground); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-doc .tv-size__frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; mix-blend-mode: multiply;
+}
+.tv .tv-size p { margin: 0 0 6px; font-size: .95rem; color: var(--slate); }
+/* --accent-700 is only 4.3:1 on the page ground; --doc-label clears AA */
+.tv .tv-size .tv-link { color: var(--doc-label); }
+.tv .tv-size .tv-link:hover { color: var(--ink); }
+/* second view of the closed tank: small thumbs sit on the photo, so all three cards stay level */
+.tv-size .tv-viewer__thumbs { position: absolute; left: 10px; bottom: 10px; margin: 0; gap: 6px; }
+.tv-doc .tv-size .tv-viewer__thumbs button { width: 52px; height: 40px; }
+
+/* FAQ, in the same open-in-place pattern as Know more */
+.tv-faq { background: var(--paper); padding: 4px 26px; border-radius: var(--r-md); box-shadow: var(--doc-sheet); }
+.tv-faq details + details { border-top: 1px solid var(--line); }
+.tv-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; }
+.tv-faq summary i { color: var(--accent-700); font-size: 20px; }
+.tv .tv-faq h3 { font-size: 1rem; font-weight: 650; line-height: 1.4; margin: 0; }
+.tv .tv-faq p { margin: 0 0 18px; font-size: .98rem; line-height: 1.65; color: var(--ink-2); }
+
+/* downloads and related products: plain link rows on a sheet */
+.tv .tv-doc__links {
+  list-style: none; margin: 0; padding: 4px 26px;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-doc__links li + li { border-top: 1px solid var(--line); }
+.tv-doc__links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; font-weight: 650; }
+.tv .tv-doc__links + .tv-doc__label { margin-top: 28px; }
+
+@media (max-width: 900px) {
+  .tv-doc { padding-top: 96px; padding-bottom: 60px; }
+  .tv-sizes { gap: 16px; }
+  .tv-faq, .tv .tv-doc__links { padding-inline: 18px; }
+  .tv-flow { padding: 16px 16px 12px; }
+  .tv-doc__top { grid-template-columns: 1fr; gap: 36px; }
+  .tv-doc__pair { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; gap: 22px; }
+  .tv-doc__dl > div { grid-template-columns: 1fr; gap: 3px; }
+  .tv-doc__dl { padding: 2px 18px; }
+  .tv-doc {
+    background:
+      linear-gradient(180deg, #CCF0FF 0, rgba(204,240,255,0) 420px),
+      url("../img/bg/pid-dx-loop.svg") right -190px top 88px / 780px auto no-repeat,
+      var(--doc-ground);
+  }
+  .tv-doc__ask { grid-template-columns: 1fr; }
+  .tv-doc .tv-doc__ask img { height: auto; aspect-ratio: 3/2; }
+  .tv-doc__ask > div { padding: 22px; }
+}
+@media (max-width: 520px) {
+  .tv-sizes { grid-template-columns: 1fr; }
+  .tv-doc .tv-table thead th, .tv-doc .tv-table tbody th, .tv-doc .tv-table tbody td { padding-inline: 12px; }
+  .tv-doc__ask > div:first-child { flex-basis: 100%; }
+  /* full-width buttons read as the page's next step on a phone */
+  .tv .tv-doc__cta .tv-btn { flex: 1 1 100%; }
+}
+
+
+/* --------------------------------------------------------------------------
+   18. Image numbers for client review — .tv-numbered on <body> badges every
+   photo in page order, so feedback can say "swap image 7". On for every page while
+   the client reviews; drop the class from each <body> to remove them.
+   -------------------------------------------------------------------------- */
+.tv-numbered { counter-reset: tv-img; }
+.tv-numbered :is(.tv-hero__slide, .tv-ind, .tv-prod__media, .tv-split__figure, .tv-doc__photo, .tv-size__frame, .tv-doc__ask-photo, .tv-viewer__thumbs button, .tv-item__frame, .tv-doc__fig, .tv-person__photo, .tv-strip__img, .tv-uses__img, .tv-doccert)::after {
+  counter-increment: tv-img; content: counter(tv-img);
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  min-width: 34px; height: 34px; padding: 0 8px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: #00AEEF; color: #0A1A2A; border: 2px solid #fff;
+  font: 700 15px/1 var(--f-display); box-shadow: 0 4px 12px rgba(0,0,0,.25);
+}
+/* the closed tank's two views are numbered on their thumbnails, which need a smaller badge */
+.tv-numbered .tv-viewer__thumbs button { position: relative; }
+.tv-numbered .tv-viewer__thumbs button::after {
+  top: 2px; left: 2px; min-width: 18px; height: 18px; padding: 0 4px;
+  border-width: 1px; font-size: 11px;
+}
+/* hero slides start under the fixed header */
+.tv-numbered .tv-hero__slide::after { top: 84px; left: 16px; }
+@media (max-width: 991px) {
+  .tv-numbered .tv-hero__slide::after { top: 12px; }
+}
+
+/* --------------------------------------------------------------------------
+   19. Shared document pages — every product, plant and company page
+   Built on section 17. Same sheets, ground and type; these add the pieces the
+   Bulk Milk Cooler page did not need: one card per piece of equipment, plain
+   running text, a logo wall and the enquiry form.
+   -------------------------------------------------------------------------- */
+/* plants and general equipment: the process train as ground instead of the DX loop */
+.tv-doc--train {
+  background:
+    linear-gradient(180deg, #CCF0FF 0, rgba(204,240,255,0) 620px),
+    url("../img/bg/pid-plant-train.svg") right -260px top 70px / 1300px auto no-repeat,
+    var(--doc-ground);
+}
+@media (max-width: 900px) {
+  .tv-doc--train {
+    background: linear-gradient(180deg, #CCF0FF 0, rgba(204,240,255,0) 420px), var(--doc-ground);
+  }
+}
+
+/* first-screen photo at a fixed 4:3, so portrait and landscape shots sit level
+   with the spec sheet. */
+.tv-doc__photo--fit { aspect-ratio: 4/3; isolation: isolate; background: var(--photo-ground); }
+.tv-doc .tv-doc__photo--fit img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; mix-blend-mode: multiply;
+}
+
+/* equipment cards: photo, name, the client's points, optional link */
+.tv-items { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; }
+.tv-item {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-item__frame {
+  position: relative; margin: 0; aspect-ratio: 4/3; overflow: hidden; isolation: isolate;
+  background: var(--photo-ground);
+}
+.tv-doc .tv-item__frame img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; mix-blend-mode: multiply;
+}
+.tv-item__body { display: flex; flex-direction: column; flex: 1; padding: 20px 24px 24px; }
+.tv .tv-item__body h3 { font-size: 1.08rem; line-height: 1.3; margin: 0 0 12px; }
+.tv .tv-item__body p { font-size: .95rem; color: var(--ink-2); margin: 0 0 12px; }
+.tv .tv-item__body .tv-link { margin-top: auto; padding-top: 16px; align-self: flex-start; }
+
+/* short point lists — a dot, not a check: these are facts, not selling points */
+.tv .tv-ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.tv-ticks li { position: relative; padding-left: 16px; font-size: .95rem; line-height: 1.5; color: var(--ink-2); }
+.tv-ticks li::before {
+  content: ""; position: absolute; left: 0; top: .6em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent-600);
+}
+
+/* running text and lists on a sheet */
+.tv-doc__prose {
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  padding: 24px 28px;
+}
+.tv .tv-doc__prose p { color: var(--ink-2); font-size: 1rem; line-height: 1.65; max-width: 72ch; }
+.tv .tv-doc__prose p:last-child, .tv .tv-doc__prose .tv-ticks:last-child { margin-bottom: 0; }
+.tv .tv-doc__prose h3 { font-size: 1.05rem; margin: 0 0 12px; }
+.tv .tv-doc__prose * + h3 { margin-top: 24px; }
+.tv .tv-doc__prose .tv-ticks { margin-bottom: 0; }
+.tv-doc__stack { display: grid; gap: 24px; align-content: start; }
+
+/* a figure on a sheet: diagram, screen or certificate, enlarges on click */
+.tv-doc__fig {
+  position: relative; margin: 0; overflow: hidden; isolation: isolate;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+  display: grid; place-items: center; padding: 16px;
+}
+.tv-doc__fig img { display: block; max-width: 100%; height: auto; }
+.tv .tv-doc__fig figcaption { justify-self: stretch; font-size: .85rem; color: var(--muted); margin-top: 10px; }
+
+/* pages with no button under the intro: keep the gap the button row would leave */
+.tv .tv-doc__intro + .tv-doc__top { margin-top: 44px; }
+
+/* the next step without a photo */
+.tv-doc__ask--plain { grid-template-columns: 1fr; }
+
+/* sheet titles inside a section: the label already names the section */
+.tv .tv-doc__sec > .tv-doc__h2 + .tv-doc__note { margin-top: -10px; }
+
+/* link lists: the size sits on the right, quieter than the name */
+.tv-doc__links small { margin-left: auto; font-size: .8rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.tv-doc__links a i { flex: 0 0 auto; }
+.tv-doc__group + .tv-doc__group { margin-top: 28px; }
+.tv-doc__cols { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 28px 40px; align-items: start; }
+
+/* client logos */
+.tv .tv-logos {
+  list-style: none; margin: 0; padding: 22px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px;
+  background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet);
+}
+.tv-logos li {
+  display: grid; place-items: center; aspect-ratio: 3/2; padding: 12px;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+}
+.tv-logos img { max-height: 72px; width: auto; object-fit: contain; }
+
+/* people */
+.tv-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 280px)); gap: 24px; }
+.tv-person__photo { position: relative; margin: 0; aspect-ratio: 5/6; overflow: hidden; background: var(--photo-ground); }
+.tv-person__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv .tv-person .tv-item__body p { color: var(--muted); margin: 0; }
+
+/* contact: form beside the addresses and map */
+.tv-doc__form { background: var(--paper); border-radius: var(--r-md); box-shadow: var(--doc-sheet); padding: 6px 30px 30px; }
+.tv .tv-doc__form .form-group:first-child { border-top: 0; }
+.tv-map { position: relative; margin: 0; aspect-ratio: 4/3; overflow: hidden; border-radius: var(--r-md); box-shadow: var(--doc-sheet); background: var(--photo-ground); }
+.tv-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.tv-doc__dl a { font-weight: 600; }
+
+@media (max-width: 1100px) {
+  .tv-items { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 900px) {
+  .tv-doc__cols { grid-template-columns: 1fr; }
+  .tv-doc__prose, .tv-doc__form { padding-inline: 18px; }
+}
+@media (max-width: 640px) {
+  .tv-items { grid-template-columns: 1fr; }
+  .tv .tv-logos { grid-template-columns: repeat(2, minmax(0,1fr)); padding: 14px; gap: 8px; }
+  .tv-people { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+}
+
+/* --------------------------------------------------------------------------
+   20. Drawing-sheet pages — .tv-sp
+   Each page opens on an engineering drawing of its own subject: views with
+   numbered balloons, a parts list and a title block, inside a zoned sheet
+   frame. That drawing is the one bold thing on the page; everything after it
+   is plain type on the sheet ground, with a single dark band to close.
+   Colour in the drawings is semantic and never decorative:
+     product = brand cyan, heat = amber, ice water = indigo, CIP = ink dashed.
+   -------------------------------------------------------------------------- */
+.tv-sp {
+  --sheet:   #F4F6F7;
+  --rule:    #CDD6DD;
+  --rule-2:  #9FB0BD;
+  --draft:   #7A8C9B;
+  --heat:    #D9731A;
+  --chill:   #3B5BCC;
+  --product: #00AEEF;
+  background: var(--sheet);
+  padding-top: 104px;
+}
+.tv-sp__wrap { width: 100%; max-width: 1340px; margin-inline: auto; padding-inline: var(--gutter); }
+
+/* opening: name on the left, what it is and what to do on the right */
+.tv-sp__crumb { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0 0 26px; padding: 0; font-size: .875rem; color: var(--muted); }
+.tv-sp__crumb li + li::before { content: "/"; margin-right: 8px; color: var(--rule-2); }
+.tv .tv-sp__crumb a { color: var(--slate); }
+.tv .tv-sp__crumb a:hover { color: var(--accent-700); }
+.tv-sp__head {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 24px 56px; align-items: end; margin-bottom: 40px;
+}
+.tv .tv-sp__title {
+  font-family: var(--f-display); font-weight: 800;
+  font-size: clamp(2.6rem, 6vw, 5.2rem); line-height: .96; letter-spacing: -.038em;
+  color: var(--ink); margin: 0; text-wrap: balance;
+}
+.tv .tv-sp__intro { font-size: 1.1rem; line-height: 1.6; color: var(--ink-3); max-width: 46ch; margin: 0 0 22px; }
+.tv-sp__act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
+.tv .tv-sp__tel { font-weight: 650; font-size: 1rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+.tv .tv-sp__tel:hover { color: var(--accent-700); }
+
+/* ---- the sheet: outer trim line, zone margin, inner border ---- */
+.tv-sheet { position: relative; background: #fff; border: 1px solid var(--ink-3); padding: 14px; }
+.tv-sheet__zones { position: absolute; inset: 0; pointer-events: none; font: 600 9px/1 var(--f-body); color: var(--draft); }
+.tv-sheet__zones span { position: absolute; }
+.tv-sheet__in { border: 2px solid var(--ink); }
+.tv-sheet__draw {
+  position: relative; padding: 26px 26px 10px;
+  background-image:
+    linear-gradient(rgba(10,26,42,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,26,42,.045) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.tv-sheet__draw svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tv-sheet__legend { display: flex; flex-wrap: wrap; gap: 8px 26px; margin: 6px 0 4px; padding: 0; list-style: none; font-size: .85rem; color: var(--slate); }
+.tv-sheet__legend li { display: flex; align-items: center; gap: 10px; }
+.tv-sheet__legend i { display: inline-block; width: 30px; height: 0; border-top: 3px solid var(--product); }
+.tv-sheet__legend .is-heat { border-top: 3px dashed var(--heat); }
+.tv-sheet__legend .is-chill { border-top-color: var(--chill); }
+.tv-sheet__legend .is-cip { border-top: 2px dashed var(--ink); }
+.tv-sheet__legend .is-steam { border-top-color: var(--heat); }
+
+/* parts list and title block share the sheet's bottom edge, as on a real drawing */
+.tv-sheet__foot { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); border-top: 2px solid var(--ink); }
+.tv-parts { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tv-parts th, .tv-parts td { padding: 9px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+.tv-parts tr:last-child th, .tv-parts tr:last-child td { border-bottom: 0; }
+.tv-parts thead th { font-size: .8rem; font-weight: 650; color: var(--muted); background: var(--sheet); border-bottom: 1px solid var(--ink); }
+.tv-parts tbody th { font-weight: 650; color: var(--ink); white-space: nowrap; }
+.tv-parts td { color: var(--ink-2); line-height: 1.5; }
+.tv-parts .tv-parts__no { width: 1%; text-align: center; font-variant-numeric: tabular-nums; }
+.tv-parts .tv-parts__no span {
+  display: inline-grid; place-items: center; width: 24px; height: 24px; border: 1.4px solid var(--ink);
+  border-radius: 50%; font-size: .78rem; font-weight: 700; color: var(--ink);
+}
+.tv-tblock { display: grid; grid-template-columns: 1fr 1fr; border-left: 2px solid var(--ink); align-content: start; }
+.tv-tblock > div { padding: 10px 14px 12px; border-bottom: 1px solid var(--rule); }
+.tv-tblock > div:nth-child(even) { border-right: 1px solid var(--rule); }
+/* four-up title block (company facts) */
+.tv-tblock--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); border-left: 0; }
+.tv-tblock--4 > div { border-right: 1px solid var(--rule); }
+.tv-tblock--4 > div:nth-child(4n+1), .tv-tblock--4 > div:first-child { border-right: 0; }
+.tv-tblock--4 > div:nth-last-child(-n+4) { border-bottom: 0; }
+.tv-tblock.tv-tblock--4 dd { font-family: var(--f-display); font-size: clamp(1.1rem, 1.7vw, 1.4rem); font-weight: 700; letter-spacing: -.015em; }
+.tv-tblock--4.tv-tblock > div { padding: 14px 18px 16px; }
+.tv-sheet .tv-seq li::before { background: #fff; }
+.tv-sheet__cap { margin: 14px 0 0; font-size: .85rem; color: var(--muted); }
+.tv .tv-parts th a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule-2); text-underline-offset: 3px; }
+.tv .tv-parts th a:hover { color: var(--accent-700); text-decoration-color: currentColor; }
+.tv-tblock > .tv-tblock__title { grid-column: 1 / -1; border-right: 0; border-bottom: 1px solid var(--ink); background: var(--sheet); }
+.tv-tblock > .tv-tblock__wide { grid-column: 1 / -1; border-right: 0; }
+.tv-tblock > div:last-child { border-bottom: 0; }
+.tv-tblock dt { font-size: .76rem; font-weight: 600; color: var(--muted); margin: 0 0 3px; }
+.tv-tblock dd { margin: 0; font-size: .98rem; font-weight: 600; color: var(--ink); line-height: 1.4; font-variant-numeric: tabular-nums; }
+.tv-tblock__title dd { font-family: var(--f-display); font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; }
+
+/* ---- drawing strokes ---- */
+.tv-dw-l     { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; }
+.tv-dw-f     { fill: #EEF3F6; stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; }
+.tv-dw-t     { fill: none; stroke: var(--draft); stroke-width: 1; }
+.tv-dw-cl    { fill: none; stroke: var(--rule-2); stroke-width: 1; stroke-dasharray: 18 4 3 4; }
+.tv-dw-proj  { fill: none; stroke: var(--rule); stroke-width: 1; stroke-dasharray: 4 4; }
+.tv-dw-dim   { fill: none; stroke: var(--draft); stroke-width: 1; }
+.tv-dw-prod  { fill: none; stroke: var(--product); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.tv-dw-heat  { fill: none; stroke: var(--heat); stroke-width: 3; stroke-dasharray: 9 6; stroke-linecap: round; stroke-linejoin: round; }
+.tv-dw-steam { fill: none; stroke: var(--heat); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-dw-chill { fill: none; stroke: var(--chill); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.tv-dw-cip   { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 7 5; }
+.tv-dw-lead  { fill: none; stroke: var(--ink); stroke-width: 1; }
+.tv-dw-dot   { fill: var(--ink); }
+.tv-dw-ball circle { fill: #fff; stroke: var(--ink); stroke-width: 1.5; }
+.tv-dw-ball .tv-dw-dot { fill: var(--ink); stroke: none; }
+.tv-dw-ball text { font: 700 15px var(--f-body); fill: var(--ink); text-anchor: middle; dominant-baseline: central; }
+.tv-dw-view  { font: 600 14px var(--f-body); fill: var(--slate); text-anchor: middle; }
+.tv-dw-note  { font: 500 13px var(--f-body); fill: var(--draft); text-anchor: middle; }
+.tv-dw-name  { font: 700 16px var(--f-display); fill: var(--ink); text-anchor: middle; }
+.tv-dw-sub   { font: 500 13.5px var(--f-body); fill: var(--slate); text-anchor: middle; }
+
+/* the one orchestrated moment: the product traces its path through the drawing */
+.tv-dw-trace { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tv-trace 1.9s var(--ease) .35s forwards; }
+.tv-dw-after { opacity: 0; animation: tv-fadein .6s ease 1.9s forwards; }
+@keyframes tv-trace { to { stroke-dashoffset: 0; } }
+@keyframes tv-fadein { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .tv-dw-trace { animation: none; stroke-dashoffset: 0; }
+  .tv-dw-after { animation: none; opacity: 1; }
+}
+
+/* process-line stations are links: the whole symbol highlights */
+.tv-dw-stn { cursor: pointer; }
+.tv-dw-stn .tv-dw-hit { fill: transparent; stroke: transparent; stroke-width: 1.5; rx: 10; transition: fill .2s var(--ease), stroke .2s var(--ease); }
+.tv-dw-stn:hover .tv-dw-hit, .tv-dw-stn:focus-visible .tv-dw-hit { fill: rgba(0,174,239,.07); stroke: var(--accent-600); }
+.tv-dw-stn:focus { outline: none; }
+.tv-dw-stn:hover .tv-dw-name, .tv-dw-stn:focus-visible .tv-dw-name { fill: var(--accent-700); }
+
+/* ---- below the sheet: plain sections, heading in the margin ---- */
+.tv-sp__sec {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px 56px;
+  padding: clamp(56px, 7vw, 96px) 0 0;
+}
+.tv .tv-sp__h2 { font-family: var(--f-display); font-size: clamp(1.45rem, 2.4vw, 2rem); line-height: 1.12; letter-spacing: -.02em; margin: 0; color: var(--ink); text-wrap: balance; }
+.tv .tv-sp__aside { font-size: .95rem; color: var(--slate); margin: 14px 0 0; max-width: 34ch; }
+.tv .tv-sp__prose p { font-size: 1.06rem; line-height: 1.7; color: var(--ink-2); max-width: 66ch; }
+.tv .tv-sp__prose p:last-child { margin-bottom: 0; }
+
+/* definition rows: a name and what it is, ruled like a schedule */
+.tv-rows { margin: 0; border-top: 1.5px solid var(--ink); }
+.tv-rows > div { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 8px 32px; padding: 18px 0 20px; border-bottom: 1px solid var(--rule); }
+.tv-rows dt { font-family: var(--f-display); font-weight: 650; font-size: 1.05rem; line-height: 1.35; color: var(--ink); }
+.tv-rows dd { margin: 0; color: var(--ink-2); line-height: 1.6; }
+.tv-rows dd p { margin: 0; color: var(--ink-2); }
+.tv-rows dd p + p { margin-top: 6px; }
+.tv .tv-rows a { font-weight: 650; }
+
+/* rows with a photo: systems and stations */
+.tv-uses { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
+.tv-uses li { position: relative; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 22px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.tv .tv-uses h3 a { color: var(--ink); }
+.tv .tv-uses h3 a::after { content: ""; position: absolute; inset: 0; }
+.tv .tv-uses li:hover h3 a { color: var(--accent-700); text-decoration: underline; text-underline-offset: 3px; }
+.tv .tv-uses h3 a:focus-visible { outline: 2px solid var(--accent-600); outline-offset: 3px; }
+.tv-uses__img { position: relative; margin: 0; aspect-ratio: 4/3; overflow: hidden; background: #fff; border: 1px solid var(--rule); }
+.tv-uses__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv .tv-uses h3 { font-size: 1.05rem; margin: 0 0 4px; }
+.tv .tv-uses p { margin: 0; font-size: .95rem; color: var(--slate); }
+
+/* shop-floor photos: a strip of real photos at their honest size */
+.tv-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 18px; }
+.tv-strip figure { margin: 0; scroll-snap-align: start; }
+.tv-strip__img { position: relative; aspect-ratio: 4/3; overflow: hidden; background: #fff; border: 1px solid var(--rule); }
+.tv-strip__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tv-strip figcaption { padding-top: 10px; font-size: .92rem; line-height: 1.45; color: var(--slate); }
+.tv-strip figcaption strong { display: block; color: var(--ink); font-weight: 650; }
+
+/* a sequence that really is a sequence: stages, stations */
+.tv-seq { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); counter-reset: seq; border-top: 1.5px solid var(--ink); }
+.tv-seq li { counter-increment: seq; position: relative; padding: 20px 22px 0 0; }
+.tv-seq li::before {
+  content: counter(seq); display: grid; place-items: center; width: 30px; height: 30px; margin: -36px 0 16px;
+  border: 1.5px solid var(--ink); border-radius: 50%; background: var(--sheet);
+  font: 700 .85rem/1 var(--f-body); color: var(--ink);
+}
+.tv .tv-seq h3 { font-size: 1.02rem; margin: 0 0 6px; }
+.tv .tv-seq p { font-size: .94rem; color: var(--slate); margin: 0; }
+
+/* values: the word is the design */
+.tv-values { margin: 0; }
+.tv-values > div { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 6px 32px; padding: 16px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.tv-values > div:first-child { border-top: 1.5px solid var(--ink); }
+.tv-values dt { font-family: var(--f-display); font-weight: 750; font-size: clamp(1.4rem, 2.4vw, 1.9rem); letter-spacing: -.025em; color: var(--ink); line-height: 1.1; }
+.tv-values dd { margin: 0; font-size: 1.02rem; line-height: 1.6; color: var(--ink-2); max-width: 60ch; }
+
+/* certificate, framed as the document it is */
+.tv-doccert { position: relative; margin: 0; justify-self: start; background: #fff; padding: 14px; border: 1px solid var(--rule); box-shadow: 0 1px 0 var(--rule), 0 18px 40px -24px rgba(10,26,42,.35); max-width: 340px; }
+.tv-doccert img { display: block; width: 100%; height: auto; }
+.tv .tv-doccert figcaption { font-size: .85rem; color: var(--muted); margin-top: 10px; }
+
+/* closing band: the only dark thing on the page */
+.tv-close { margin-top: clamp(64px, 8vw, 112px); background: var(--ink); color: #DDE8F0; }
+.tv-close__in { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 32px 64px; padding: clamp(48px, 6vw, 80px) 0; }
+.tv .tv-close h2 { color: #fff; font-family: var(--f-display); font-size: clamp(1.7rem, 3.2vw, 2.6rem); line-height: 1.08; letter-spacing: -.025em; margin: 0 0 18px; }
+.tv .tv-close p { color: rgba(221,232,240,.8); max-width: 48ch; }
+.tv .tv-close__need { list-style: none; margin: 0 0 28px; padding: 0; border-top: 1px solid rgba(255,255,255,.18); }
+.tv-close__need li { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.12); color: #fff; font-weight: 500; }
+.tv .tv-close .tv-btn--ghost { color: #fff; border-color: rgba(255,255,255,.35); }
+.tv .tv-close .tv-btn--ghost:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,.08); }
+.tv-close__files { margin-top: 30px; }
+.tv .tv-close__files a { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,.12); color: #8FDCFF; font-weight: 600; }
+.tv .tv-close__files a:hover { color: #fff; }
+.tv .tv-close__files small { color: rgba(221,232,240,.6); font-weight: 500; }
+
+/* the footer follows the dark band directly; give them a seam */
+.tv-sp + #footer .footer-top { border-top: 1px solid rgba(255,255,255,.08); }
+
+.tv-sheet__hint { display: none; margin: 0 0 8px; font-size: .82rem; color: var(--muted); }
+
+@media (max-width: 1100px) {
+  .tv-sheet__foot { grid-template-columns: 1fr; }
+  .tv-tblock { border-left: 0; border-top: 2px solid var(--ink); }
+  .tv-tblock--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 0; }
+  .tv-tblock--4 > div:nth-child(n) { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .tv-tblock--4 > div:nth-child(even) { border-right: 1px solid var(--rule); }
+  .tv-tblock--4 > div:last-child, .tv-tblock--4 > div:nth-last-child(2):nth-child(even) { border-bottom: 0; }
+  .tv-seq { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+}
+@media (max-width: 900px) {
+  .tv-sp { padding-top: 92px; }
+  .tv-sp__head, .tv-sp__sec, .tv-close__in { grid-template-columns: 1fr; }
+  .tv-sp__head { gap: 20px; }
+  .tv-sheet { padding: 8px; }
+  .tv-sheet__zones { display: none; }
+  /* drawings keep their scale and scroll sideways, as drawings do on a phone */
+  .tv-sheet__draw { overflow-x: auto; padding: 16px 12px 8px; }
+  .tv-sheet__draw svg { min-width: 760px; }
+  .tv-sheet__hint { display: block; }
+  .tv-rows > div, .tv-values > div { grid-template-columns: 1fr; }
+  .tv-uses li { grid-template-columns: 96px minmax(0, 1fr); }
+  /* phones: the photos become a strip you swipe */
+  .tv-strip { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 74%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; }
+}
+@media (max-width: 560px) {
+  .tv-seq { grid-template-columns: 1fr; }
+  .tv-parts thead { display: none; }
+  /* phones: the specification drops under its part name */
+  .tv-parts, .tv-parts tbody { display: block; }
+  .tv-parts tbody tr { display: grid; grid-template-columns: 46px minmax(0, 1fr); padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  .tv-parts tbody tr:last-child { border-bottom: 0; }
+  .tv-parts tbody th, .tv-parts tbody td { border-bottom: 0; padding: 2px 0; white-space: normal; }
+  .tv-parts tbody .tv-parts__no { grid-row: span 2; width: auto; }
+  .tv-parts tbody td:last-child { grid-column: 2; }
+  .tv-tblock { grid-template-columns: 1fr; }
+  .tv-tblock > div:nth-child(n), .tv-tblock--4 > div:nth-child(n) { border-right: 0; }
+  .tv-tblock--4 { grid-template-columns: 1fr; }
+  .tv-tblock--4 > div:nth-last-child(2):nth-child(even) { border-bottom: 1px solid var(--rule); }
+  .tv .tv-sp__act .tv-btn { flex: 1 1 100%; }
+}

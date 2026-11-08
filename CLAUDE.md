@@ -5,7 +5,9 @@ equipment and turnkey plants for the dairy, food, beverage and chemical industry
 Deployed on Vercel. No build step — the files in the repo root are what ship.
 
 > **Next.js migration in progress.** Read `NEXTJS-MIGRATION.md` first: status table,
-> decisions, and the 0-pixel rule. Resume from its "Next action".
+> decisions, and the one rule (markup must not change). Resume from its "Next action".
+> The pages in `next/app/` and `next/components/generated/` are generated from the root
+> `*.html` and `templates/` by `npm run convert`. Never edit them: edit the HTML and re-run.
 
 ## Running it locally
 
