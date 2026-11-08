@@ -1,5 +1,5 @@
 import type { Viewport } from "next";
-import { LegacyScripts } from "@/components/LegacyScripts";
+import { Behaviour } from "@/components/Behaviour";
 
 // The old pages say "1.0", and the markup has to match character for character.
 export const viewport: Viewport = { width: "device-width", initialScale: "1.0" as unknown as number };
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <LegacyScripts />
+        <Behaviour />
       </body>
     </html>
   );

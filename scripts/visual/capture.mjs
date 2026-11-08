@@ -160,6 +160,9 @@ async function shot(page, path, opts = {}) {
     return !s.length || s[0].classList.contains("is-active");
   });
   if (!heroOk) throw new Error("hero advanced before the shot");
+  // Markup in every state, not only on load: from Step 6 the behaviour is new code, so the classes
+  // and inline styles it leaves (menu, overlay, viewer, lightbox, form) have to match too.
+  writeFileSync(path.replace(/\.png$/, ".txt"), await page.evaluate(snapshot));
   const target = opts.element ? page.locator(opts.element).first() : page;
   await target.screenshot({
     path,
@@ -180,9 +183,8 @@ async function capturePage(name) {
   const hasLightbox = async (page) => (await page.locator("[data-lightbox]").count()) > 0;
 
   for (const w of [1440, 390]) {
-    // 1. Full page, reduced motion: every reveal shown, nothing moving. Markup once, at 1440.
+    // 1. Full page, reduced motion: every reveal shown, nothing moving.
     let { ctx, page, rep } = await open(name, w, { reducedMotion: "reduce" });
-    if (w === 1440) writeFileSync(join(dir, "markup.txt"), await page.evaluate(snapshot));
     rep.overflow[w] = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
@@ -236,6 +238,27 @@ async function capturePage(name) {
     }
   }
 
+  // 5b. Contact form filled and sent, with the endpoint faked (no email is sent): a "Sent!" reply,
+  // then any other reply. The request each site makes is recorded and compared too.
+  if (name === "contact.html") {
+    for (const [state, reply] of [["form-sent", "Sent! (faked by the harness)"], ["form-error", "Mail error (faked)"]]) {
+      const { ctx, page } = await open(name, 1440);
+      await page.route(/cloudfunctions\.net/, async (route) => {
+        const r = route.request();
+        writeFileSync(join(dir, `${state}-request.txt`), [r.method(), r.url(), r.headers()["content-type"], r.postData(), ""].join("\n"));
+        await route.fulfill({ status: 200, contentType: "text/plain", headers: { "Access-Control-Allow-Origin": "*" }, body: reply });
+      });
+      await page.fill("#name", "Test Person");
+      await page.fill("#email", "test.person@example.com");
+      await page.fill("#subject", "Plate heat exchanger, 10 KLPH");
+      await page.fill("#message", `Line one: capacity & product (milk)!\nLine two ~ 50% "quoted" 'single' *star*`);
+      await page.locator("form.php-email-form [type=submit]").click();
+      await pause(page, 1200);
+      await shot(page, p(`${state}-1440`), { element: "form.php-email-form" });
+      await ctx.close();
+    }
+  }
+
   // 6. Mobile menu open; nested dropdown expanded on the menu pages.
   {
     const { ctx, page } = await open(name, 390);
@@ -248,7 +271,22 @@ async function capturePage(name) {
       await page.locator(".mobile-nav .drop-down > a", { hasText: "Heat Transfer" }).first().click();
       await pause(page, 700);
       await shot(page, p("dropdown-390"));
+      await page.locator(".mobile-nav .drop-down > a", { hasText: "Heat Transfer" }).first().click(); // collapse
+      await pause(page, 700);
+      await shot(page, p("dropdown-closed-390"));
     }
+    await ctx.close();
+  }
+
+  // 6b. Menu opened, then closed by a click outside it (the overlay strip at the left edge): the
+  // fade-out path. A fresh page, so index.html's 6 s hero crossfade has not ticked yet.
+  {
+    const { ctx, page } = await open(name, 390);
+    await page.locator(".mobile-nav-toggle").click();
+    await pause(page, 700);
+    await page.mouse.click(5, 420);
+    await pause(page, 900);
+    await shot(page, p("menu-closed-390"));
     await ctx.close();
   }
 

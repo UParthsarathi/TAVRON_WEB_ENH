@@ -8,6 +8,8 @@ Deployed on Vercel. No build step — the files in the repo root are what ship.
 > decisions, and the one rule (markup must not change). Resume from its "Next action".
 > The pages in `next/app/` and `next/components/generated/` are generated from the root
 > `*.html` and `templates/` by `npm run convert`. Never edit them: edit the HTML and re-run.
+> In `next/`, the behaviour below (`tavron-modern.js`, the mobile menu, the contact form)
+> runs from `next/components/Behaviour.tsx`, without jQuery; a change to one needs the other.
 
 ## Running it locally
 

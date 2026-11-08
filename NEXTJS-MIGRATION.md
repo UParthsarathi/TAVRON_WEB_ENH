@@ -24,7 +24,7 @@ reverted, not argued.
 Update this table at the end of every session.
 
 Sessions were re-planned on 2026-11-08: about **4 sessions** for Steps 2–8. Session 1
-also finished Step 5, so about **2 more**.
+also finished Step 5, and Session 2 (Step 6) is done, so about **1 more** (Steps 7–8).
 
 | Step | What | Session | State | Commit |
 |---|---|---|---|---|
@@ -34,17 +34,16 @@ also finished Step 5, so about **2 more**.
 | 3 | Root layout, Header, Footer, mobile nav as components | 1 | done | `f9e084f` |
 | 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | done | `f9e084f` |
 | 5 | Convert the other 34 pages | 1 | done, all 35 pages × all states match | `f9e084f` |
-| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | not started | |
+| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | done; one real test email still to send, with the user's OK | session 2 |
 | 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 3 | not started | |
 | 8 | Production build, Lighthouse before/after, preview deploy | 3 | not started | |
 
 
-Could stretch if the menu and contact form need extra care (Step 6). Going live waits on
-the user.
+Going live waits on the user.
 
-**Next action:** Session 2 = Step 6. Read "Interim behaviour" under Decisions and the
-Session 1 log entry first. Ends with `components/LegacyScripts.tsx` deleted, no jQuery
-loaded, and the full diff still 348/348.
+**Next action:** Session 3 = Steps 7 and 8. Before that, with the user's OK, send one
+real enquiry through the new contact form (Step 6's last check). Re-capture the reference
+first (it now has 706 checks).
 
 ## How to resume in a new session
 
@@ -83,7 +82,8 @@ rebuilt from the `legacy-html` tag. Nothing load-bearing lives in a session scra
 | Head order (session 1) | Each page renders its own `<title>`, meta and canonical; the layout renders the favicon and preconnect links *after* `{children}` in `<body>`; stylesheets stay in the layout's `<head>`. No `metadata` export | React 19 hoists title/meta/link into `<head>` in render order, ahead of the stylesheets. Next's metadata API reorders tags and drops `og:type=product` |
 | Viewport (session 1) | `viewport` export with `initialScale: "1.0"` (string cast) | The old pages say `initial-scale=1.0`; a number serialises as `1` |
 | `data-aos-*` on `<body>` (session 1) | Rendered statically by the layout (`ease`, `1000`, `0`) | `AOS.init()` in `main.js` left them on every old page, so they are in the reference markup. Nothing uses them; removing them is a separate decision |
-| Interim behaviour (session 1, until Step 6) | `components/LegacyScripts.tsx` loads, **after hydration**, `jquery`, `jquery.easing`, `validate.js`, then attaches the 3 mobile-nav handlers copied unchanged from `main.js`, then loads `tavron-modern.js`. `main.js` itself is not loaded | `main.js` would inject the header a second time and clone a second mobile nav. Before hydration, `tavron-modern.js` would edit the DOM React is about to adopt (the marquee duplication would force a client re-render). The rest of the vendor block only served `main.js` (finding 9); leaving it out changed no markup and no pixel |
+| Behaviour (session 2) | `components/Behaviour.tsx`, one client component in the layout. After hydration it attaches to the server-rendered markup and leaves the same classes and inline styles the old scripts did. jQuery animations re-done with the Web Animations API, which leaves no inline styles, so only `display` stays, as with jQuery. No jQuery, no old script file is loaded. `[data-count]` counters not ported (no page uses them) | Pages are server components and never re-render, so state-driven components would only add a converter special case per behaviour, with more ways for the markup to drift. Bundled, typed, 0 extra requests |
+| Interim behaviour (session 1, **replaced in session 2**) | `components/LegacyScripts.tsx` loads, **after hydration**, `jquery`, `jquery.easing`, `validate.js`, then attaches the 3 mobile-nav handlers copied unchanged from `main.js`, then loads `tavron-modern.js`. `main.js` itself is not loaded | `main.js` would inject the header a second time and clone a second mobile nav. Before hydration, `tavron-modern.js` would edit the DOM React is about to adopt (the marquee duplication would force a client re-render). The rest of the vendor block only served `main.js` (finding 9); leaving it out changed no markup and no pixel |
 
 ## What the port must reproduce (found by reading the code)
 
@@ -165,8 +165,8 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
   backlog is 5, so parallel captures got `ERR_CONNECTION_REFUSED` on random files.
 - **Compare:** markup must be equal line for line (the gate). Screenshots: `pixelmatch`
   with colour threshold 0.1 and anti-aliasing ignored, at most 150 differing pixels per
-  shot (`--threshold`, `--max-px`). Reference vs reference left up to 86 stray glyph
-  pixels in nav text on 2026-11-08; `--max-px 0` shows the raw counts. Every failure
+  shot (`--threshold`, `--max-px`). Reference vs reference left up to 96 stray glyph
+  pixels (nav and body text) on 2026-11-08; `--max-px 0` shows the raw counts. Every failure
   writes a diff PNG to `.migration/diff/`.
   It also flags console errors and failed requests that the candidate has and the
   reference does not, and any horizontal overflow.
@@ -176,19 +176,25 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
   - first viewport with normal motion
   - viewport after scrolling 400px (solid header)
 - **Interaction states** (pages that have them): mobile menu open (390), a mobile
-  dropdown expanded, desktop dropdown hovered (1440), lightbox open, viewer thumbnail 2
-  selected, contact form submitted empty (validation messages).
+  dropdown expanded and collapsed again, the menu closed by a click outside it (fade-out),
+  desktop dropdown hovered (1440), lightbox open, viewer thumbnail 2 selected, contact
+  form submitted empty (validation messages), and filled and sent with the endpoint faked
+  to answer "Sent!" and then something else (`form-sent`, `form-error`). The request each
+  site makes is saved as `form-*-request.txt` and compared like markup.
+- **Markup in every state** (since session 2): each screenshot has a `.txt` next to it
+  with the page markup at that moment, so classes and inline styles left by the menu,
+  overlay, viewer, lightbox and form are compared too.
 - **Stability:** Chrome runs with `--force-color-profile=srgb --disable-gpu
   --font-render-hinting=none`. The harness waits for the injected header/footer,
   `document.fonts.ready` and every image. It switches `loading="lazy"` images to eager
   first, because lazy images that sit off-screen (the logo marquee) never load otherwise.
   CSS animations are frozen (`animations: "disabled"`). A shot of index.html is refused,
-  and the page retried, if the 6 s hero crossfade has already ticked. The contact form
-  endpoint is blocked inside the harness, so no test run can send an email.
+  and the page retried, if the 6 s hero crossfade has already ticked (so keep each state's
+  clicks within ~3 s of load; that is why 6b opens a fresh page). The contact form
+  endpoint is blocked or faked inside the harness, so no test run can send an email.
 - **Determinism check:** capture the reference twice. The two runs' *markup* must match.
   (Their pixels did not on 2026-11-06, which is why the pixel gate was dropped.)
-- **Also recorded per page:** the final page markup (whitespace-normalised, scripts
-  stripped), console errors, failed requests, and horizontal overflow
+- **Also recorded per page:** console errors, failed requests, and horizontal overflow
   (`scrollWidth - clientWidth`, must be 0). The markup is compared too: text or
   attribute drift that happens not to show in a screenshot still counts as a failure.
 
@@ -242,8 +248,9 @@ have to be proven equal.
 *Done when:* every interaction state matches, no console errors, and the form test-posts
 successfully (ask before sending a real email).
 
-**Step 7 – Performance.** Remove one item at a time, re-diffing after each: unused
-vendor JS (finding 9), the 3 unused vendor stylesheets, Google Fonts → `next/font`
+**Step 7 – Performance.** Remove one item at a time, re-diffing after each: the old JS
+files in `next/public/` (since Step 6 nothing loads them: `assets/js/*.js` and the vendor
+`*.js`; check the vendor folders' CSS and fonts stay), the 3 unused vendor stylesheets, Google Fonts → `next/font`
 (subsets `latin` + `latin-ext`), CSS bundled through Next. Anything that moves a pixel
 goes back.
 *Done when:* full diff passes and the removed list is recorded in the log.
@@ -264,7 +271,9 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
 
 ## Open questions for the user
 
-- Contact form error bug: keep identical (default) or fix?
+- Contact form error bug: keep identical (default) or fix? Session 2 kept it: a reply other
+  than "Sent!" shows the empty red error box, as before (the new code just doesn't throw).
+  A fix is one line in `components/Behaviour.tsx` plus the wording of the message.
 - `tavron-web` folder: parked by default (see Decisions). Delete it, or keep for a later CMS phase?
 - Ajay's `home-equipment-photos` branch (30,000 sq.ft, 400+ customers; local branch here,
   not pushed): fold into the site before or after the port?
@@ -318,3 +327,18 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
     Find it with `Get-CimInstance Win32_Process -Filter "Name='node.exe'"`, stop it by
     PID, and curl for something only the new build has before capturing.
   - Next: Session 2 = Step 6.
+- 2026-11-08, Session 2 (`session 2` in the table = this session's commit): **Step 6 done.**
+  - `components/Behaviour.tsx` replaces `LegacyScripts.tsx` (deleted): `tavron-modern.js`,
+    the mobile-nav handlers of `main.js` and `validate.js`, ported without jQuery. The
+    pages load no old script any more. See "Behaviour" under Decisions.
+  - Harness: markup now recorded in every state; new states `dropdown-closed-390`,
+    `menu-closed-390` (fresh page, see Stability), `form-sent-1440`, `form-error-1440`
+    with the endpoint faked, and the posted request compared byte for byte (the new
+    code reproduces `jQuery.param`'s encoding). Reference captured twice: markup in every
+    state identical.
+  - Result: **706/706 checks** (35 pages, every state's markup and screenshot, both form
+    requests). No console errors on any page; the old contact page logs
+    `ReferenceError: msg is not defined` in `form-error`, the new one does not. With
+    `--max-px 0` the 7 shots that differ match reference-vs-reference jitter exactly.
+  - Not done: one real enquiry through the form (needs the user's OK; it emails Tavron).
+  - Next: Session 3 = Steps 7 and 8.
