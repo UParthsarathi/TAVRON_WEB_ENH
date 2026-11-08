@@ -34,7 +34,7 @@ also finished Step 5, and Session 2 (Step 6) is done, so about **1 more** (Steps
 | 3 | Root layout, Header, Footer, mobile nav as components | 1 | done | `f9e084f` |
 | 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | done | `f9e084f` |
 | 5 | Convert the other 34 pages | 1 | done, all 35 pages × all states match | `f9e084f` |
-| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | done; one real test email still to send, with the user's OK | session 2 |
+| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | done; one real test email still to send, with the user's OK | `243f96e` |
 | 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 3 | not started | |
 | 8 | Production build, Lighthouse before/after, preview deploy | 3 | not started | |
 
@@ -327,7 +327,7 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
     Find it with `Get-CimInstance Win32_Process -Filter "Name='node.exe'"`, stop it by
     PID, and curl for something only the new build has before capturing.
   - Next: Session 2 = Step 6.
-- 2026-11-08, Session 2 (`session 2` in the table = this session's commit): **Step 6 done.**
+- 2026-11-08, Session 2 (`243f96e`): **Step 6 done.**
   - `components/Behaviour.tsx` replaces `LegacyScripts.tsx` (deleted): `tavron-modern.js`,
     the mobile-nav handlers of `main.js` and `validate.js`, ported without jQuery. The
     pages load no old script any more. See "Behaviour" under Decisions.
