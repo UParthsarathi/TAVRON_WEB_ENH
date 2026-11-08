@@ -1,2 +1,6 @@
 .vercel
 .claude/settings.local.json
+
+# Next.js migration: screenshots, diffs, legacy export (rebuilt from the legacy-html tag)
+.migration/
+node_modules/

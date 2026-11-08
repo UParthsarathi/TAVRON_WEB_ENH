@@ -1,0 +1,16 @@
+{
+  "name": "tavron-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "legacy:export": "node scripts/visual/legacy-export.mjs",
+    "legacy:serve": "node scripts/visual/serve.mjs .migration/legacy 8000",
+    "visual:capture": "node scripts/visual/capture.mjs",
+    "visual:compare": "node scripts/visual/compare.mjs"
+  },
+  "devDependencies": {
+    "pixelmatch": "^8.0.0",
+    "playwright-core": "^1.64.1",
+    "pngjs": "^7.0.0"
+  }
+}

@@ -4,6 +4,9 @@ Static HTML site for Tavron Engineers (Chennai, India), a manufacturer of proces
 equipment and turnkey plants for the dairy, food, beverage and chemical industry.
 Deployed on Vercel. No build step — the files in the repo root are what ship.
 
+> **Next.js migration in progress.** Read `NEXTJS-MIGRATION.md` first: status table,
+> decisions, and the 0-pixel rule. Resume from its "Next action".
+
 ## Running it locally
 
 The header and footer are injected at runtime by jQuery `$.load()` from
