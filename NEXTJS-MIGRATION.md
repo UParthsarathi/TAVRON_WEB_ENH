@@ -29,16 +29,15 @@ also finished Step 5, so about **2 more**.
 | Step | What | Session | State | Commit |
 |---|---|---|---|---|
 | 0 | Branch `nextjs`, tag `legacy-html` | – | done | `51c0dcc` |
-| 1 | Visual test harness (screenshots + page markup) | – | done; markup gate + pixel tolerance since session 1 | `51c0dcc`, session 1 |
-| 2 | `next/` folder: Next.js scaffold, static files copied into `next/public/`, `.html` URLs kept | 1 | done | session 1 |
-| 3 | Root layout, Header, Footer, mobile nav as components | 1 | done | session 1 |
-| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | done | session 1 |
-| 5 | Convert the other 34 pages | 1 | done, all 35 pages × all states match | session 1 |
+| 1 | Visual test harness (screenshots + page markup) | – | done; markup gate + pixel tolerance since session 1 | `51c0dcc`, `f9e084f` |
+| 2 | `next/` folder: Next.js scaffold, static files copied into `next/public/`, `.html` URLs kept | 1 | done | `f9e084f` |
+| 3 | Root layout, Header, Footer, mobile nav as components | 1 | done | `f9e084f` |
+| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | done | `f9e084f` |
+| 5 | Convert the other 34 pages | 1 | done, all 35 pages × all states match | `f9e084f` |
 | 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 2 | not started | |
 | 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 3 | not started | |
 | 8 | Production build, Lighthouse before/after, preview deploy | 3 | not started | |
 
-"session 1" in the Commit column = the 2026-11-08 Session 1 commit on `nextjs` (see the log).
 
 Could stretch if the menu and contact form need extra care (Step 6). Going live waits on
 the user.
@@ -292,7 +291,7 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
   pages translated by script; proof is matching markup, screenshots with tolerance (the
   0-pixel gate was the blocker); `tavron-web` not used; ~4 sessions. The user said
   "leave it" to chasing the screenshot determinism. Next: Session 1 (Steps 2–4).
-- 2026-11-08, Session 1: **Steps 2–5 done.**
+- 2026-11-08, Session 1 (`f9e084f`): **Steps 2–5 done.**
   - Harness: reference captured twice; markup identical on all 35 pages. `compare.mjs`
     switched to the markup gate plus pixel tolerance (see "Compare"). `capture.mjs` skips
     Next's empty `<div hidden>` metadata outlet, which Next always renders first in
