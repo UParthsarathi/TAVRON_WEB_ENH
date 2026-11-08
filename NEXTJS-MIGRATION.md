@@ -5,10 +5,19 @@ sessions, **without changing the design at all**.
 
 ## The one rule
 
-Every page must render **pixel-identical** to the current site. The test is a
-screenshot diff against a reference captured from the old site: **0 differing pixels**
-at 1440px and 390px, plus the interaction states listed below. A step is not done
-until its diff is 0. If a change moves one pixel, it is reverted, not argued.
+The design must not change at all ("not even 0.001 percent", the user's words). The
+method is a straight translation: each page's HTML becomes React, the CSS files and
+images ship unchanged.
+
+**How it is proven (changed 2026-11-08):** same final page markup + same CSS + same
+assets = same rendering. So the gate is **markup**: for every page, the DOM the browser
+ends up with on the new site must equal the old one (whitespace-normalised, scripts
+stripped), at 1440px and 390px and in the interaction states listed below. Screenshots
+are still taken and compared, but with a small anti-aliasing tolerance, as a visual
+check. The old 0-pixel screenshot gate was dropped because Chrome is not pixel-stable
+on its own: two captures of the *same* old site differed on 12 pages. A step is not done
+until its markup matches. If a change alters the markup or visibly moves anything, it is
+reverted, not argued.
 
 ## Status
 
@@ -16,17 +25,25 @@ Update this table at the end of every session.
 
 | Step | What | Session | State | Commit |
 |---|---|---|---|---|
-| 0 | Branch `nextjs`, tag `legacy-html` | 1 | done | see log |
-| 1 | Visual test harness + reference capture | 1 | in progress: harness written, determinism check fails | |
-| 2 | Next.js scaffold, assets into `public/`, URLs kept | 2 | not started | |
-| 3 | Root layout, Header, Footer, mobile nav as components | 2 | not started | |
-| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 2 | not started | |
-| 5 | Convert the other 34 pages | 3 | not started | |
-| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 4 | not started | |
-| 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 5 | not started | |
-| 8 | Production build, Lighthouse before/after, final checks | 5 | not started | |
+Sessions were re-planned on 2026-11-08: about **4 sessions** for Steps 2–8.
 
-**Next action:** Step 1. Make two reference runs diff to 0 (see the 2026-11-06 log entry).
+| Step | What | Session | State | Commit |
+|---|---|---|---|---|
+| 0 | Branch `nextjs`, tag `legacy-html` | – | done | `51c0dcc` |
+| 1 | Visual test harness (screenshots + page markup) | – | written; `compare.mjs` still uses the old 0-pixel gate, switch it to the markup gate when first used | `51c0dcc` |
+| 2 | `next/` folder: Next.js scaffold, static files copied into `next/public/`, `.html` URLs kept | 1 | not started | |
+| 3 | Root layout, Header, Footer, mobile nav as components | 1 | not started | |
+| 4 | HTML-to-JSX converter, pilot on `bulkCoolers.html` | 1 | not started | |
+| 5 | Convert the other 34 pages | 2 | not started | |
+| 6 | Replace jQuery + `main.js` + `tavron-modern.js` + `validate.js` with React | 3 | not started | |
+| 7 | Performance: drop vendor JS/CSS, self-host fonts, bundle CSS | 4 | not started | |
+| 8 | Production build, Lighthouse before/after, preview deploy | 4 | not started | |
+
+Could stretch to 5–6 sessions if the converter meets many one-off page quirks (Step 5)
+or the menu and contact form need extra care (Step 6). Going live waits on the user.
+
+**Next action:** Session 1 = Steps 2, 3, 4. Ends with `bulkCoolers.html` running in
+Next.js with markup identical to the old page.
 
 ## How to resume in a new session
 
@@ -36,7 +53,8 @@ Update this table at the end of every session.
    Chrome auto-updates, and a new Chrome can move pixels on its own. Reference and
    candidate must come from the same Chrome, so never compare against an old reference.
    The commands are under "Visual test harness" (about 4 minutes).
-4. Do the next step. At the end: run the full diff, update the table and the log, commit.
+4. Do the next step. At the end: run the full diff, update the table and the log,
+   commit, and push to `origin`.
 
 Everything a later session needs is in the repo (scripts, this file) or can be
 rebuilt from the `legacy-html` tag. Nothing load-bearing lives in a session scratchpad.
@@ -51,15 +69,19 @@ rebuilt from the `legacy-html` tag. Nothing load-bearing lives in a session scra
 | URLs | **Unchanged.** `/bulkCoolers.html` keeps working via `next.config.ts` rewrites; canonicals unchanged | Zero SEO risk. Clean URLs are a later, separate decision |
 | Route names | One folder per page with the same name: `app/bulkCoolers/page.tsx`, `app/ButterProcessing/page.tsx` | Rewrite is a single rule `/:page.html` → `/:page`, plus `/index.html` → `/` |
 | Images | Byte-identical, plain `<img>` | WebP/AVIF re-encoding changes pixels. Deferred |
-| Static files | `assets/`, `downloads/`, `news/`, `old-site/` move to `public/` unchanged; `vercel.json` noindex header kept | Same URLs, same bytes |
-| `templates/` | Removed once Header/Footer are components (Step 3) | Nothing else loads them |
-| Branch | `nextjs` off `bmc-five-sections`. Commit at the end of each step. Ask before pushing or deploying | Ajay's repo (`AjayCs2311/TAVRON_WEB_ENH`) and the live site untouched |
+| Folder (2026-11-08) | The Next.js app lives in **`next/`** inside this repo. The old static site stays at the repo root, untouched, and keeps deploying until switch-over | Both versions side by side in one repo on GitHub; switching is one Vercel setting (Root Directory → `next`) |
+| Static files | `assets/`, `downloads/`, `news/`, `old-site/` **copied** into `next/public/` unchanged; `vercel.json` noindex header kept | Same URLs, same bytes; the old site keeps its own copy until switch-over |
+| `templates/` | Not used by `next/`; Header/Footer become components (Step 3) | The old site at the root still needs them |
+| Branch | `nextjs` off `bmc-five-sections`. Commit **and push to `origin`** (`UParthsarathi/TAVRON_WEB_ENH`) at the end of each session. Ask before deploying | Work must never again live on one disk only. Ajay's repo (`AjayCs2311/TAVRON_WEB_ENH`) and the live site untouched |
+| Translation (2026-11-08) | By script, never by hand. Hand-fixing the output is not allowed: fix the converter and re-run | 35 pages, ~8,400 lines; one fix in the script fixes every page |
+| Proof (2026-11-08) | Markup gate, screenshots as visual check with tolerance (see "The one rule") | Chrome is not pixel-stable between two runs of the same page |
+| `tavron-web` folder | `C:\Users\pavan\Tavron\tavron-web` (Oct 22, Supabase + admin, no design, new URLs) is **not** used. Parked; its CMS/admin ideas could be a phase after the port | It is a different product, not a translation |
 | Converter | Node script using `parse5` (spec-compliant HTML parser) | Produces the exact tree a browser builds (implied `<tbody>`, closed `<p>`), so the JSX matches the real DOM |
 | Test tooling | `playwright-core` driving the installed Chrome (no browser download), `pixelmatch` + `pngjs` | Small dev dependencies only |
 
 ## What the port must reproduce (found by reading the code)
 
-These are non-obvious. Getting any of them wrong breaks the 0-pixel rule.
+These are non-obvious. Getting any of them wrong breaks the one rule.
 
 1. **Nested header and footer.** `main.js` runs `$(header).load(...)` into the existing
    `<header id="header" data-load=… data-active-menu=… class="fixed-top">`. The template is
@@ -133,8 +155,9 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
 
 - **Server:** `scripts/visual/serve.mjs`, not `python -m http.server`. Python's listen
   backlog is 5, so parallel captures got `ERR_CONNECTION_REFUSED` on random files.
-- **Compare:** byte-equal pixels, else `pixelmatch` with threshold 0 and anti-aliasing
-  counted. The report lists every non-zero result and writes a diff PNG to `.migration/diff/`.
+- **Compare:** *as written:* byte-equal pixels, else `pixelmatch` with threshold 0 and
+  anti-aliasing counted. *To change (2026-11-08):* markup equality is the pass/fail;
+  pixels use a small tolerance with anti-aliasing ignored. The report lists every non-zero result and writes a diff PNG to `.migration/diff/`.
   It also flags console errors and failed requests that the candidate has and the
   reference does not, and any horizontal overflow.
 - **Captured per page, at 1440×900 and 390×844, DPR 1:**
@@ -152,8 +175,8 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
   CSS animations are frozen (`animations: "disabled"`). A shot of index.html is refused,
   and the page retried, if the 6 s hero crossfade has already ticked. The contact form
   endpoint is blocked inside the harness, so no test run can send an email.
-- **Determinism check:** capture the reference twice. The two runs must diff to 0, or
-  the harness is not trustworthy yet.
+- **Determinism check:** capture the reference twice. The two runs' *markup* must match.
+  (Their pixels did not on 2026-11-06, which is why the pixel gate was dropped.)
 - **Also recorded per page:** the final page markup (whitespace-normalised, scripts
   stripped), console errors, failed requests, and horizontal overflow
   (`scrollWidth - clientWidth`, must be 0). The markup is compared too: text or
@@ -168,11 +191,12 @@ npm run visual:compare -- --a .migration/reference --b .migration/candidate
 **Step 1 – Harness and reference.** Create `package.json` with the dev dependencies above
 and write `scripts/visual/capture.mjs` and `compare.mjs`. Capture the reference twice and
 compare them.
-*Done when:* reference vs reference = 0 on every page and state.
+*Done when:* reference vs reference markup matches on every page and state.
 
-**Step 2 – Scaffold.** Add Next.js 16, React 19, TypeScript and Tailwind v4 (no
-Preflight) to the same `package.json`. Move the static files to `public/`. Add the
-`next.config.ts` rewrites. Use a placeholder layout.
+**Step 2 – Scaffold.** Create `next/` with its own `package.json`: Next.js 16, React 19,
+TypeScript and Tailwind v4 (no Preflight). Copy the static files into `next/public/`. Add
+the `next.config.ts` rewrites. Use a placeholder layout. The root `package.json` keeps
+only the test harness.
 *Done when:* `next build` passes, `/assets/...`, `/downloads/...` and `/old-site/...` are
 served byte-identical, and `/bulkCoolers.html` resolves.
 
@@ -188,25 +212,26 @@ parse5. It maps attributes (`class`→`className`, `for`→`htmlFor`, SVG kebab�
 `style` string→object), handles whitespace (finding 6) and entities, and drops comments.
 It extracts head tags into `export const metadata` and JSON-LD into a `<script>`. Run it
 on `bulkCoolers.html` only.
-*Done when:* `/bulkCoolers.html` = 0 pixels in every state, and its markup matches.
+*Done when:* `/bulkCoolers.html` markup matches in every state and the screenshots
+pass the tolerance check.
 
 **Step 5 – All pages.** Run the converter on the other 34 pages. Diff, fix the
-converter (not the output by hand), and re-run until everything is 0.
-*Done when:* all 35 pages × all states = 0.
+converter (not the output by hand), and re-run until everything matches.
+*Done when:* all 35 pages × all states match.
 
 **Step 6 – Behaviour in React.** Small client components replace jQuery: header solid on
 scroll, reveal, hero crossfade, viewer, lightbox, marquee, mobile nav (slideToggle
 re-done with the Web Animations API, same 300 ms and swing easing), contact form (same
 validation, same endpoint, same messages). Delete `main.js`, `tavron-modern.js`,
 `validate.js` and the jQuery script tags.
-*Done when:* every interaction state = 0, no console errors, and the form test-posts
+*Done when:* every interaction state matches, no console errors, and the form test-posts
 successfully (ask before sending a real email).
 
 **Step 7 – Performance.** Remove one item at a time, re-diffing after each: unused
 vendor JS (finding 9), the 3 unused vendor stylesheets, Google Fonts → `next/font`
 (subsets `latin` + `latin-ext`), CSS bundled through Next. Anything that moves a pixel
 goes back.
-*Done when:* full diff = 0 and the removed list is recorded in the log.
+*Done when:* full diff passes and the removed list is recorded in the log.
 
 **Step 8 – Ship check.** Run a production build and Lighthouse (mobile and desktop) on
 5 representative pages, old vs new. Run the CLAUDE.md checks (console, failed requests,
@@ -225,6 +250,9 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
 ## Open questions for the user
 
 - Contact form error bug: keep identical (default) or fix?
+- `tavron-web` folder: parked by default (see Decisions). Delete it, or keep for a later CMS phase?
+- Ajay's `home-equipment-photos` branch (30,000 sq.ft, 400+ customers; local branch here,
+  not pushed): fold into the site before or after the port?
 
 ## Session log
 
@@ -243,3 +271,8 @@ overflow). Update CLAUDE.md for the new structure (how to run it, where things l
   `origin` = `UParthsarathi/TAVRON_WEB_ENH`) and committed, so the work is no longer on one
   disk only. Old screenshots were not copied: re-capture per "How to resume". Ajay's
   `home-equipment-photos` branch (30,000 sq.ft, 400+ customers) copied in as a local branch.
+  `nextjs` and the `legacy-html` tag pushed to `origin`.
+- 2026-11-08, re-plan with the user (no code): app goes in `next/` inside this repo;
+  pages translated by script; proof is matching markup, screenshots with tolerance (the
+  0-pixel gate was the blocker); `tavron-web` not used; ~4 sessions. The user said
+  "leave it" to chasing the screenshot determinism. Next: Session 1 (Steps 2–4).
